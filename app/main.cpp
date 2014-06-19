@@ -31,7 +31,6 @@
 #include "Invoice.hpp"
 
 void		Save(ods::Book&);
-void		TestFonts(ods::Book&);
 
 void
 Lesson1CreateEmptyBook()
@@ -45,7 +44,8 @@ Lesson1CreateEmptyBook()
 	auto *cell = row->CreateCell(0);
 	cell->SetValue("cell at 0");
 	
-	// another cell, at index 5
+	// another cell, at index 5,
+	// since it's zero based it's the 6th cell (column)
 	cell = row->CreateCell(5);
 	cell->SetValue("cell at 5");
 	
@@ -324,15 +324,6 @@ main(int argc, char *argv[])
 	
 	Lesson9CreateSampleInvoice();
 	return 0;
-}
-
-void
-Read()
-{
-	qDebug() << "Read existing.ods from home dir";
-	QFile file(QDir(QDir::home()).filePath("existing.ods"));
-	ods::Book book;
-	book.Read(file.fileName());
 }
 
 void
