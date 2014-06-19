@@ -21,16 +21,11 @@
  */
 
 #include <ods/ods>
-#include <mtl/err.hpp>
-#include <cstdio>
-#include <pthread.h>
-#include <time.h>
-#include <unistd.h>
 #include <QtCore>
-#include <QtGui>
 #include "Invoice.hpp"
 
-void		Save(ods::Book&);
+void
+Save(ods::Book&);
 
 void
 Lesson1CreateEmptyBook()
