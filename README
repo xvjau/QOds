@@ -1,1 +1,10 @@
-Hello world
+QOds is a free Qt5 (C++11) library to read/write .ods (OpenDocument
+Spreadsheet) files.
+
+Results tested on MS Office 2013, LibreOffice, and Calligra Sheets.
+
+For a simple tutorial check the code in app/main.cpp which also shows
+how to create a sample invoice with formulas and (png) logos.
+
+For questions etc: f35f22fan@gmail.com
+
