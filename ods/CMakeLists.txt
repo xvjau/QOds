@@ -14,16 +14,7 @@ include_directories(${QOds_SOURCE_DIR}/mtl)
 link_directories(${QOds_BINARY_DIR}/mtl)
 link_directories(${QOds_BINARY_DIR}/quazip)
 
-add_definitions(-std=c++11)
-# Find includes in corresponding build directories
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-if (DEFINED ODS_DSO)
-	add_definitions(-DODS_DSO_BUILD)
-	set(lib_type SHARED)
-else (DEFINED ODS_DSO)
-	set(lib_type STATIC)
-endif (DEFINED ODS_DSO)
+add_definitions(-std=c++11 -DODS_BUILDING)
 
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
@@ -39,8 +30,8 @@ foreach(f IN LISTS lib_files)
 		COMPILE_DEFINITIONS "SRC_FILE_NAME=\"${b}\"")
 endforeach()
 
-add_library(ods ${lib_type} ${lib_files})
-target_link_libraries(ods quazip mtl Qt5::Core Qt5::Gui)
+add_library(ods SHARED ${lib_files})
+target_link_libraries(ods quazip Qt5::Core Qt5::Gui)
 
 
 

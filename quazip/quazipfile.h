@@ -26,6 +26,7 @@ quazip/(un)zip.h files for details, basically it's zlib license.
  **/
 
 #include <QIODevice>
+#include <QDebug>
 
 #include "quazip_global.h"
 #include "quazip.h"
@@ -77,8 +78,8 @@ class QUAZIP_EXPORT QuaZipFile: public QIODevice {
   private:
     QuaZipFilePrivate *p;
     // these are not supported nor implemented
-    QuaZipFile(const QuaZipFile& that);
-    QuaZipFile& operator=(const QuaZipFile& that);
+    //QuaZipFile(const QuaZipFile& that);
+    //QuaZipFile& operator=(const QuaZipFile& that);
   protected:
     /// Implementation of the QIODevice::readData().
     qint64 readData(char *data, qint64 maxSize);

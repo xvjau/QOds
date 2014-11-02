@@ -1,6 +1,9 @@
 QOds is a free Qt5 (C++11) library to read/write .ods (OpenDocument
 Spreadsheet) files.
 
+See "how_to_build.html" for how to build for Windows
+with MinGW or Visual Studio 2013.
+
 Results tested on MS Office 2013, LibreOffice, and Calligra Sheets.
 
 For a simple tutorial check the code in app/main.cpp which also shows
@@ -10,4 +13,3 @@ The resulting sample invoice file created programmatically with QOds
 can be viewed in the "app" subfolder, it's called "Invoice.ods".
 
 For questions etc: f35f22fan@gmail.com
-

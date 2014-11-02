@@ -1,4 +1,18 @@
-message(STATUS "PROCESSING ${CMAKE_CURRENT_LIST_FILE}")
+add_definitions(-std=c++11 -DQUAZIP_BUILD)
+# Find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# Instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOMOC ON)
+
+include_directories(${QOds_SOURCE_DIR})
+include_directories(${QOds_SOURCE_DIR}/zlib)
+
+link_directories(${QOds_BINARY_DIR})
+link_directories(${QOds_BINARY_DIR}/zlib)
+
+
+find_package(Qt5Core REQUIRED)
+
 # set all include directories for in and out of source builds
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
@@ -6,29 +20,10 @@ include_directories(
 	${ZLIB_INCLUDE_DIRS}
 )
 
-find_package(Qt5Core)
+file(GLOB_RECURSE src_files
+	"*.h" "*.hh" "*.hpp" "*.hxx"
+	"*.c" "*.cc" "*.cpp")
 
-# Find includes in corresponding build directories
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# Instruct CMake to run moc automatically when needed.
-set(CMAKE_AUTOMOC ON)
-
-find_package(PkgConfig)
-pkg_check_modules(SYSZLIB zlib)
-link_directories(${SYSZLIB_LIBRARY_DIRS})
-include_directories(${SYSZLIB_INCLUDE_DIRS})
-
-file(GLOB source_files "*.c" "*.cpp" "*.h")
-
-if (DEFINED QUAZIP_BUILD)
-	# Must be added to enable export macro
-	add_definitions(-DQUAZIP_BUILD)
-	set (lib_type SHARED)
-else (DEFINED QUAZIP_BUILD)
-	add_definitions(-DQUAZIP_STATIC)
-	set (lib_type STATIC)
-endif (DEFINED QUAZIP_BUILD)
-
-add_library(quazip ${lib_type} ${source_files})
-target_link_libraries(quazip Qt5::Core ${SYSZLIB_LIBRARIES})
-
+add_library(quazip SHARED ${src_files})
+#set_target_properties(quazip PROPERTIES VERSION 1.0.0 SOVERSION 1)
+target_link_libraries(quazip Qt5::Core zlib)

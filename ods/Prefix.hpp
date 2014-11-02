@@ -23,14 +23,14 @@
 #ifndef ODS_PREFIX_HPP_
 #define ODS_PREFIX_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include <mtl/err.hpp>
 #include "ods.hxx"
 #include<QXmlStreamWriter>
 
 namespace ods	{ // ods::
 
-class ODS_DSO_SHARE Prefix
+class ODS_API Prefix
 {
 public:
 	Prefix(const ods::Uri &uri);

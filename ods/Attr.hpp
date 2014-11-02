@@ -24,7 +24,7 @@
 #ifndef ODS_ATTR_HPP_
 #define ODS_ATTR_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include "Prefix.hpp"
 #include <mtl/err.hpp>
 
@@ -35,7 +35,7 @@ namespace ods	{ // ods::
 class Attrs;
 class Prefix;
 
-class ODS_DSO_SHARE Attr
+class ODS_API Attr
 {
 public:
 	//==> used by ods::Tag

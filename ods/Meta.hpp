@@ -23,7 +23,7 @@
 #ifndef ODS_META_HPP_
 #define ODS_META_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include "Duration.hpp"
 #include <mtl/err.hpp>
 #include <QDateTime>
@@ -37,7 +37,7 @@ class Book;
 class Ns;
 class Tag;
 
-class ODS_DSO_SHARE Meta
+class ODS_API Meta
 {
 public:
 	Meta(ods::Book*);

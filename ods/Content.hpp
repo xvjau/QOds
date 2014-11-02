@@ -23,7 +23,7 @@
 #ifndef ODS_Content_HPP_
 #define ODS_Content_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include "ns.hxx"
 #include "ods.hxx"
 #include <mtl/err.hpp>
@@ -43,7 +43,7 @@ class Sheet;
 class Style;
 class Tag;
 
-class ODS_DSO_SHARE Content
+class ODS_API Content
 {
 public:
 	Content(ods::Book *book);

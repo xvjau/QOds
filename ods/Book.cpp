@@ -199,7 +199,6 @@ Book::Read(const QString &file_path)
 QString
 Book::Save(const QFile &target)
 {
-	static const auto kOk = QStringLiteral();
 	QString save_dir = temp_dir_.path();
 	SaveMimeTypeFile(save_dir);
 	QString err;
@@ -233,7 +232,7 @@ Book::Save(const QFile &target)
 	QString ods_path = target.fileName();
 	if (!JlCompress::compressDir(ods_path, save_dir))
 		return "Failed to compress dir";
-	return kOk;
+	return "";
 }
 
 void

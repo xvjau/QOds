@@ -1,19 +1,18 @@
 message(STATUS "PROCESSING ${CMAKE_CURRENT_LIST_FILE}")
 
-include_directories(${QOds_SOURCE_DIR})
-include_directories(${QOds_SOURCE_DIR}/mtl)
-include_directories(${QOds_SOURCE_DIR}/ods)
-include_directories(${QOds_SOURCE_DIR}/quazip)
-
-link_directories(${QOds_BINARY_DIR}/ods)
-link_directories(${QOds_BINARY_DIR}/quazip)
-
-add_definitions(-std=c++11)
-
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
+
+include_directories(${QOds_SOURCE_DIR})
+include_directories(${QOds_SOURCE_DIR}/mtl)
+include_directories(${QOds_SOURCE_DIR}/ods)
+
+link_directories(${QOds_BINARY_DIR}/ods)
+link_directories(${QOds_BINARY_DIR}/mtl)
+
+add_definitions(-std=c++11)
 
 # Set some Win32 Specific Settings
 if(WIN32)
@@ -34,5 +33,4 @@ foreach(f IN LISTS src_files)
 endforeach()
 
 add_executable(ods_test ${GUI_TYPE} ${src_files})
-target_link_libraries(ods_test pthread m
-	Qt5::Core Qt5::Gui mtl quazip ods)
+target_link_libraries(ods_test Qt5::Core Qt5::Gui ods)

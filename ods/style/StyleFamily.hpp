@@ -24,12 +24,13 @@
 #define ODS_STYLE_STYLEFAMILY_HPP_
 
 #include <mtl/err.hpp>
+#include "../global.hxx"
 #include "../ods.hxx"
 
 namespace ods	{ // ods::
 namespace style	{ // ods::style::
 
-class ODS_DSO_SHARE StyleFamily
+class ODS_API StyleFamily
 {
 public:
 	StyleFamily(const ods::StyleFamilyId);

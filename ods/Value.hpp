@@ -24,7 +24,7 @@
 #define ODS_data_HPP_
 
 #include "cell.hxx"
-#include "dso.hxx"
+#include "global.hxx"
 #include "ods.hh"
 #include "ods.hxx"
 
@@ -39,7 +39,7 @@ class Attrs;
 class Ns;
 class Tag;
 
-class ODS_DSO_SHARE Value
+class ODS_API Value
 {
 public:
 	Value();

@@ -24,7 +24,7 @@
 #define ODS_NS_HPP_
 
 #include "Attr.hpp"
-#include "dso.hxx"
+#include "global.hxx"
 #include "ns.hxx"
 #include "ods.hxx"
 #include "Prefix.hpp"
@@ -35,7 +35,7 @@
 
 namespace ods	{ // ods::
 
-class ODS_DSO_SHARE Ns
+class ODS_API Ns
 {
 public:
 	Ns(const ods::UriId);

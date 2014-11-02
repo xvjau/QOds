@@ -23,13 +23,13 @@
 #ifndef ODS_UTIL_HH_
 #define ODS_UTIL_HH_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include <mtl/err.hpp>
 
 namespace ods	{ // ods::
 namespace util	{ // ods::util::
 
-ODS_DSO_SHARE QString
+ODS_API QString
 GetMimeType(const QString &kFilePath);
 
 } // ods::util::

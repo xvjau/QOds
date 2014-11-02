@@ -23,6 +23,7 @@
 #ifndef ODS_STYLE_MANAGER_HPP_
 #define ODS_STYLE_MANAGER_HPP_
 
+#include "../global.hxx"
 #include "../ods.hxx"
 #include <mtl/err.hpp>
 #include <QString>
@@ -39,7 +40,7 @@ class Tag;
 
 namespace style	{ // ods::style::
 
-class ODS_DSO_SHARE Manager
+class ODS_API Manager
 {
 public:
 	Manager(ods::Book *book);

@@ -28,7 +28,6 @@
 #include <QString>
 #include <QTime>
 
-#include "dso.hxx"
 #include "ods.hxx"
 
 namespace ods	{ // ods::

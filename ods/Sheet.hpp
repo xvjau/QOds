@@ -23,7 +23,7 @@
 #ifndef ODS_SHEET_HPP_
 #define ODS_SHEET_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include "Tag.hpp"
 #include <mtl/err.hpp>
 #include <QString>
@@ -42,7 +42,7 @@ class Row;
 class Style;
 class Tag;
 
-class ODS_DSO_SHARE Sheet
+class ODS_API Sheet
 {
 public:
 	Sheet(ods::Content *content, ods::Tag*);

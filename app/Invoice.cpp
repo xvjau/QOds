@@ -128,16 +128,18 @@ Invoice::CreateSellerHeader()
 	QFile file(path);
 	if (!file.exists())
 	{
-		qDebug() << "No " << kName << " in home dir?";
-		return -1;
+		
+		qDebug() << "If there was " << kName <<
+			" in your home dir, I'd also display the \"company logo\".";
+	} else {
+		auto *draw_frame = cell->CreateDrawFrame(file);
+		if (draw_frame == nullptr)
+		{
+			qDebug() << "draw_image == nullptr";
+			return -1;
+		}
+		draw_frame->SetSize(QSize(60, 60));
 	}
-	auto *draw_frame = cell->CreateDrawFrame(file);
-	if (draw_frame == nullptr)
-	{
-		qDebug() << "draw_image == nullptr";
-		return -1;
-	}
-	draw_frame->SetSize(QSize(60, 60));
 	
 	auto *style = book_.CreateCellStyle();
 	style->SetBold(true);

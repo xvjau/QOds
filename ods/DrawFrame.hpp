@@ -23,6 +23,7 @@
 #ifndef ODS_DRAW_FRAME_HPP_
 #define ODS_DRAW_FRAME_HPP_
 
+#include "global.hxx"
 #include "ods.hxx"
 #include "tag.hxx"
 #include <QFile>
@@ -36,7 +37,7 @@ class Cell;
 class Prefix;
 class Tag;
 
-class ODS_DSO_SHARE DrawFrame
+class ODS_API DrawFrame
 {
 public:
 	DrawFrame(ods::Cell*, const QFile&);

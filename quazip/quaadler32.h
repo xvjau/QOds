@@ -28,6 +28,7 @@ see quazip/(un)zip.h files for details. Basically it's the zlib license.
 
 #include <QByteArray>
 
+#include "quazip_global.h"
 #include "quachecksum32.h"
 
 /// Adler32 checksum

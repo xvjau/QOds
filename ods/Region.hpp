@@ -23,7 +23,7 @@
 #ifndef ODS_REGION_HPP_
 #define ODS_REGION_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include "region.hxx"
 #include <mtl/err.hpp>
 #include <QString>
@@ -33,7 +33,7 @@ namespace ods	{ // ods::
 
 class Value;
 
-class ODS_DSO_SHARE Region
+class ODS_API Region
 {
 protected:
 	Region();

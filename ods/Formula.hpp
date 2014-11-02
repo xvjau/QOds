@@ -24,7 +24,7 @@
 #define ODS_FORMULA_HPP_
 
 #include "cell.hxx"
-#include "dso.hxx"
+#include "global.hxx"
 #include "Value.hpp"
 #include <mtl/err.hpp>
 #include <QByteArray>
@@ -37,7 +37,7 @@ namespace ods	{ // ods::
 class Cell;
 class Value;
 
-class ODS_DSO_SHARE Formula
+class ODS_API Formula
 {
 public:
 	Formula();

@@ -23,7 +23,7 @@
 #ifndef ODS_COLUMN_HPP_
 #define ODS_COLUMN_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include <mtl/err.hpp>
 
 namespace ods	{ // ods::
@@ -33,7 +33,7 @@ class Sheet;
 class Style;
 class Tag;
 
-class ODS_DSO_SHARE Column
+class ODS_API Column
 {
 public:
 	Column(ods::Sheet *sheet, ods::Tag*);

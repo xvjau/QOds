@@ -23,7 +23,7 @@
 #ifndef ODS_ATTRS_HPP_
 #define ODS_ATTRS_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include <mtl/err.hpp>
 #include <QXmlStreamAttributes>
 
@@ -34,7 +34,7 @@ namespace ods	{ // ods::
 class Attr;
 class Prefix;
 
-class ODS_DSO_SHARE Attrs
+class ODS_API Attrs
 {
 public:
 	Attrs();

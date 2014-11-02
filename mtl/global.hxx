@@ -23,20 +23,12 @@
 #ifndef MTL_GLOBAL_HXX_
 #define MTL_GLOBAL_HXX_
 
-#if defined _WIN32 || defined __CYGWIN__
-	#define MTL_DSO_IMPORT_T __declspec(dllimport)
-	#define MTL_DSO_EXPORT_T __declspec(dllexport)
-	#define MTL_DSO_HIDDEN_T
+#include <QtCore/QtGlobal>
+
+#ifdef MTL_BUILDING
+	#define MTL_API Q_DECL_EXPORT
 #else
-	#if __GNUC__ >= 4
-		#define MTL_DSO_IMPORT_T __attribute__ ((visibility ("default")))
-		#define MTL_DSO_EXPORT_T __attribute__ ((visibility ("default")))
-		#define MTL_DSO_HIDDEN_T __attribute__ ((visibility ("hidden")))
-	#else
-		#define MTL_DSO_IMPORT_T
-		#define MTL_DSO_EXPORT_T
-		#define MTL_DSO_HIDDEN_T
-	#endif
+	#define MTL_API Q_DECL_IMPORT
 #endif
 
 #endif

@@ -26,6 +26,7 @@ Original ZIP package is copyrighted by Gilles Vollant and contributors,
 see quazip/(un)zip.h files for details. Basically it's the zlib license.
 */
 
+#include "quazip_global.h"
 #include "quazip.h"
 #include "quazipfile.h"
 #include "quazipfileinfo.h"
@@ -40,7 +41,7 @@ see quazip/(un)zip.h files for details. Basically it's the zlib license.
   simple operations, such as mass ZIP packing or extraction.
   */
 class QUAZIP_EXPORT JlCompress {
-private:
+public:
     /// Compress a single file.
     /**
       \param zip Opened zip to compress the file to.

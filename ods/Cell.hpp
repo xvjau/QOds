@@ -23,7 +23,7 @@
 #ifndef ODS_CELL_HPP_
 #define ODS_CELL_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 
 #include <mtl/err.hpp>
 #include <QByteArray>
@@ -43,7 +43,7 @@ class Row;
 class Style;
 class Tag;
 
-class ODS_DSO_SHARE Cell
+class ODS_API Cell
 {
 public:
 	Cell();
@@ -150,7 +150,7 @@ public:
 	UpdateAll() { UpdateValue(); }
 	
 	void
-	UpdateValue();
+	UpdateValue() { mtl_line("Should not be called"); };
 	
 	qint32
 	UpToColumn() const { return col_start_ +

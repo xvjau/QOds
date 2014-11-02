@@ -100,8 +100,8 @@ protected:
   virtual qint64 writeData(const char *data, qint64 maxSize);
 private:
     // not implemented by design to disable copy
-    QuaGzipFile(const QuaGzipFile &that);
-    QuaGzipFile& operator=(const QuaGzipFile &that);
+    // QuaGzipFile(const QuaGzipFile &that);
+    // QuaGzipFile& operator=(const QuaGzipFile &that);
     QuaGzipFilePrivate *d;
 };
 

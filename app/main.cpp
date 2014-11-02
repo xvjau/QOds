@@ -104,6 +104,11 @@ Lesson3UseFontsAndStyles()
 	style->SetFontSize(20.0);
 	style->SetTextColor(QColor(200, 0, 0));
 	cell->SetStyle(style);
+	
+	// We got a big font size in a cell, so when done creating all the cells
+	// of the row tell the row to resize itself vertically for the contents
+	// of the cell with the biggest font size to be fully visible by default
+	// when opened with an office suite like LibreOffice or MS Office.
 	row->SetOptimalHeightStyle();
 	
 	cell = row->CreateCell(1);
@@ -188,7 +193,8 @@ Lesson6CellSpan()
 	
 	auto *cell = row->CreateCell(0);
 	cell->SetValue("string");
-	// The cell will span over 2 rows and 4 columns.
+	// By default a cell spans over 1 row and 1 column.
+	// Make the cell span over 2 rows and 4 columns:
 	cell->SetRowColSpan(2, 4);
 	
 	Save(book);
@@ -305,7 +311,6 @@ Lesson10ReadFile()
 			qDebug() << "Cell value as string:" << *value.AsString();
 		else
 			qDebug() << "Unknown cell type";
-		
 	}
 }
 

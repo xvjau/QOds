@@ -23,7 +23,7 @@
 #ifndef ODS_STYLE_TAG_HH_
 #define ODS_STYLE_TAG_HH_
 
-#include "../ods.hxx"
+#include "../global.hxx"
 
 namespace ods		{ // ods::
 class Ns;
@@ -31,37 +31,37 @@ class Tag;
 namespace style		{ // ods::style::
 namespace tag		{ // ods::style::tag::
 
-ODS_DSO_SHARE ods::Tag*	AutomaticStyles(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	DefaultStyle(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	FooterStyle(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	FontFace(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	FontFaceDecls(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	GraphicProps(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	HeaderFooterProps(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	HeaderStyle(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	Map(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	MasterPage(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	MasterStyles(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	NumberCurrencyStyle(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	NumberStyle(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	OfficeDocStyles(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	PageLayout(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	PageLayoutProps(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	ParagraphProps(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	RegionLeft(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	RegionRight(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	SheetCellProps(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	SheetColumnProps(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	SheetProps(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	SheetRowProps(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	Style(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	StyleFooter(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	StyleFooterLeft(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	StyleHeader(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	StyleHeaderLeft(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	StyleRegionLeft(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	Styles(ods::Ns&, ods::Tag*);
-ODS_DSO_SHARE ods::Tag*	TextProps(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	AutomaticStyles(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	DefaultStyle(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	FooterStyle(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	FontFace(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	FontFaceDecls(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	GraphicProps(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	HeaderFooterProps(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	HeaderStyle(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	Map(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	MasterPage(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	MasterStyles(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	NumberCurrencyStyle(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	NumberStyle(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	OfficeDocStyles(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	PageLayout(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	PageLayoutProps(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	ParagraphProps(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	RegionLeft(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	RegionRight(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	SheetCellProps(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	SheetColumnProps(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	SheetProps(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	SheetRowProps(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	Style(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	StyleFooter(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	StyleFooterLeft(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	StyleHeader(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	StyleHeaderLeft(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	StyleRegionLeft(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	Styles(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	TextProps(ods::Ns&, ods::Tag*);
 
 } // ods::style::tag::
 } // ods::style::

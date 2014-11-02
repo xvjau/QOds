@@ -23,7 +23,7 @@
 #ifndef ODS_MANIFEST_HPP_
 #define ODS_MANIFEST_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include <mtl/err.hpp>
 
 namespace ods	{ // ods::
@@ -33,7 +33,7 @@ class DrawFrame;
 class Ns;
 class Tag;
 
-class ODS_DSO_SHARE Manifest
+class ODS_API Manifest
 {
 public:
 	Manifest(ods::Book*);

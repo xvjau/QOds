@@ -29,7 +29,7 @@
 #include <QXmlStreamAttributes>
 
 #include "cell.hxx"
-#include "dso.hxx"
+#include "global.hxx"
 #include "Duration.hpp"
 
 class QXmlStreamWriter;
@@ -39,40 +39,40 @@ namespace ods	{ // ods::
 class Cell;
 class Ns;
 
-ODS_DSO_SHARE QChar
+ODS_API QChar
 CharFromOp(const ods::Op);
 
-ODS_DSO_SHARE ods::Op // error => ods::Op::NONE
+ODS_API ods::Op // error => ods::Op::NONE
 CharToOp(const QChar sign);
 
-ODS_DSO_SHARE ods::Cell* // error => nullptr
+ODS_API ods::Cell* // error => nullptr
 FindCell(ods::cell::Ref *ref, ods::Cell *source);
 
-ODS_DSO_SHARE QString
+ODS_API QString
 FontSizeToString(const double size, const ods::FontSizeType tp);
 
-ODS_DSO_SHARE qint32
+ODS_API qint32
 GenColIndex(const QStringRef &letters);
 
-ODS_DSO_SHARE QString
+ODS_API QString
 GenColName(const qint32 kColumn);
 
-ODS_DSO_SHARE ods::cell::Ref* // error => nullptr
+ODS_API ods::cell::Ref* // error => nullptr
 ReadRowCol(const QStringRef &s);
 
-ODS_DSO_SHARE ods::Type
+ODS_API ods::Type
 TypeFromString(const QString &ods_type);
 
-ODS_DSO_SHARE const char* // nullptr if not found
+ODS_API const char* // nullptr if not found
 TypeToString(const ods::Type &value_type);
 
-ODS_DSO_SHARE quint32
+ODS_API quint32
 version_major();
 
-ODS_DSO_SHARE quint32
+ODS_API quint32
 version_micro();
 
-ODS_DSO_SHARE quint32
+ODS_API quint32
 version_minor();
 
 } // ods::

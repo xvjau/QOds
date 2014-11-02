@@ -23,7 +23,7 @@
 #ifndef ODS_STYLE_HPP_
 #define ODS_STYLE_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include "ods.hxx"
 #include "tag.hxx"
 #include <mtl/err.hpp>
@@ -41,7 +41,7 @@ class Border;
 class StyleFamily;
 } // ods::style::
 
-class ODS_DSO_SHARE Style
+class ODS_API Style
 {
 public:
 	Style(ods::Book*, ods::Tag*, ods::style::StyleFamily*,

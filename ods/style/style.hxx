@@ -23,9 +23,6 @@
 #ifndef ODS_STYLE_HXX_
 #define ODS_STYLE_HXX_
 
-#include "../dso.hxx"
-#include <QtGlobal>
-
 #ifndef ods_const
 #define ods_const const char * const
 #endif

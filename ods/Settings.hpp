@@ -23,7 +23,7 @@
 #ifndef ODS_SETTINGS_HPP_
 #define ODS_SETTINGS_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include <mtl/err.hpp>
 
 namespace ods	{ // ods::
@@ -32,7 +32,7 @@ class Book;
 class Ns;
 class Tag;
 
-class ODS_DSO_SHARE Settings
+class ODS_API Settings
 {
 public:
 	Settings(ods::Book*);

@@ -23,7 +23,7 @@
 #ifndef ODS_STYLE_BORDER_HPP_
 #define ODS_STYLE_BORDER_HPP_
 
-#include "../dso.hxx"
+#include "../global.hxx"
 #include "../ods.hxx"
 #include <mtl/err.hpp>
 #include <QColor>
@@ -31,7 +31,7 @@
 namespace ods	{ // ods::
 namespace style	{ // ods::style::
 
-class ODS_DSO_SHARE Border
+class ODS_API Border
 {
 public:
 	Border();

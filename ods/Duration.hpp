@@ -26,11 +26,11 @@
 #include <QtGlobal>
 #include <QtCore/QString>
 
-#include "dso.hxx"
+#include "global.hxx"
 
 namespace ods	{
 
-class ODS_DSO_SHARE Duration
+class ODS_API Duration
 {
 public:
 	Duration();

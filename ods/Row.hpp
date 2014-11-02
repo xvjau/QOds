@@ -24,7 +24,7 @@
 #define ODS_ROW_HPP_
 
 #include "cell.hxx"
-#include "dso.hxx"
+#include "global.hxx"
 #include <mtl/err.hpp>
 #include <QVector>
 
@@ -36,7 +36,7 @@ class Sheet;
 class Style;
 class Tag;
 
-class ODS_DSO_SHARE Row
+class ODS_API Row
 {
 public:
 	Row(ods::Sheet *sheet, ods::Tag*, const qint32 row_start);

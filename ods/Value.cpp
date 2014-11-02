@@ -146,9 +146,8 @@ Value::SetString(const QString &s)
 QString
 Value::toString() const
 {
-	static const auto kEmpty = QStringLiteral();
 	if (error() || (data_ == nullptr))
-		return kEmpty;
+		return "";
 	
 	if (IsDouble() || IsPercentage())
 		return QString::number(*AsDouble());
@@ -159,7 +158,7 @@ Value::toString() const
 	if (IsCurrency())
 		mtl_qline("Currency not supported yet");
 	
-	return kEmpty;
+	return "";
 }
 
 } // namespace ods

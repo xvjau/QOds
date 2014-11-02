@@ -23,35 +23,35 @@
 #ifndef ODS_META_HH_
 #define ODS_META_HH_
 
-#include "dso.hxx"
+#include "global.hxx"
 
 namespace ods	{ // ods::
 class Ns;
 class Tag;
 namespace meta	{ // ods::meta::
 
-ods::Tag* ODS_DSO_SHARE
+ODS_API ods::Tag*
 CreationDate(ods::Ns&, ods::Tag*);
 
-ods::Tag* ODS_DSO_SHARE
+ODS_API ods::Tag*
 DocumentStatistic(ods::Ns&, ods::Tag*);
 
-ods::Tag* ODS_DSO_SHARE
+ODS_API ods::Tag*
 EditingCycles(ods::Ns&, ods::Tag*);
 
-ods::Tag* ODS_DSO_SHARE
+ODS_API ods::Tag*
 EditingDuration(ods::Ns&, ods::Tag*);
 
-ods::Tag* ODS_DSO_SHARE
+ODS_API ods::Tag*
 Generator(ods::Ns&, ods::Tag*);
 
-ods::Tag* ODS_DSO_SHARE
+ODS_API ods::Tag*
 InitialCreator(ods::Ns&, ods::Tag*);
 
-ods::Tag* ODS_DSO_SHARE
+ODS_API ods::Tag*
 Office(ods::Ns&, ods::Tag*);
 
-ods::Tag* ODS_DSO_SHARE
+ODS_API ods::Tag*
 OfficeDocument(ods::Ns&, ods::Tag*);
 
 } // ods::meta::

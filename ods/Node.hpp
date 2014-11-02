@@ -23,14 +23,14 @@
 #ifndef ODS_NODE_HPP_
 #define ODS_NODE_HPP_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include "node.hxx"
 #include <mtl/err.hpp>
 
 namespace ods	{ // ods::
 class Tag;
 
-class ODS_DSO_SHARE Node
+class ODS_API Node
 {
 public:
 	Node(const QString&);

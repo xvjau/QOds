@@ -22,7 +22,7 @@
 
 #ifndef ODS_BOOK_HPP_
 #define ODS_BOOK_HPP_
-#include "dso.hxx"
+#include "global.hxx"
 #include "Content.hpp"
 #include "Duration.hpp"
 #include "ods.hh"
@@ -47,7 +47,7 @@ namespace style	{ // ods::style::
 class Manager;
 } // ods::style::
 
-class ODS_DSO_SHARE Book
+class ODS_API Book
 {
 public:
 	Book();

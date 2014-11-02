@@ -23,7 +23,7 @@
 #ifndef ODS_ODS_HXX_ 
 #define ODS_ODS_HXX_
 
-#include "dso.hxx"
+#include "global.hxx"
 #include <QtGlobal>
 #include <QString>
 

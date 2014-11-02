@@ -19,6 +19,8 @@
  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  */
+ 
+ #include "global.hxx"
 
 #ifndef MTL_ERR_HPP_
 #define MTL_ERR_HPP_
@@ -39,24 +41,34 @@
 	#define MTL_COLOR_RED		""
 #endif
 
-#define mtl_flag fprintf(stdout, "%s %d\n", __FUNCTION__, __LINE__)
-
+#ifdef _MSC_VER
+#define mtl_line(fmt, ...) fprintf(stdout, \
+	"%s[%s %s %.3d] " fmt "%s\n", MTL_COLOR_BLUE, SRC_FILE_NAME, \
+	__FUNCTION__, __LINE__, __VA_ARGS__, MTL_COLOR_DEFAULT)
+#else
 #define mtl_line(fmt, args...) fprintf(stdout, \
 	"%s[%s %s %.3d] " fmt "%s\n", MTL_COLOR_BLUE, SRC_FILE_NAME, \
-	__func__, __LINE__, ##args, MTL_COLOR_DEFAULT)
+	__FUNCTION__, __LINE__, ##args, MTL_COLOR_DEFAULT)
+#endif
 
+#ifdef _MSC_VER
+#define mtl_warn(fmt, ...) fprintf(stderr, \
+	"%s[Warning %s %s %.3d] " fmt "%s\n", MTL_COLOR_RED, SRC_FILE_NAME, \
+	__FUNCTION__, __LINE__, __VA_ARGS__, MTL_COLOR_DEFAULT)
+#else
 #define mtl_warn(fmt, args...) fprintf(stderr, \
 	"%s[Warning %s %s %.3d] " fmt "%s\n", MTL_COLOR_RED, SRC_FILE_NAME, \
-	__func__, __LINE__, ##args, MTL_COLOR_DEFAULT)
+	__FUNCTION__, __LINE__, ##args, MTL_COLOR_DEFAULT)
+#endif
 
 #define mtl_status(status) fprintf (stderr, "%s[%s %s %.3d] %s%s\n", \
 	MTL_COLOR_RED, SRC_FILE_NAME, \
-	__LINE__, __func__, strerror(status), MTL_COLOR_DEFAULT)
+	__LINE__, __FUNCTION__, strerror(status), MTL_COLOR_DEFAULT)
 
-#define mtl_errno fprintf (stderr, "[%s %.3d] %m\n", __LINE__, __func__)
+#define mtl_errno fprintf (stderr, "[%s %.3d] %m\n", __LINE__, __FUNCTION__)
 
 #define mtl_qline(qstr) qDebug().nospace() << MTL_COLOR_BLUE << "[" << \
-	SRC_FILE_NAME << ' ' << __func__ << ' ' << __LINE__ << "] " << \
+	SRC_FILE_NAME << ' ' << __FUNCTION__ << ' ' << __LINE__ << "] " << \
 	qstr << MTL_COLOR_DEFAULT
 
 #define NO_ASSIGN_COPY_MOVE(TypeName)	\

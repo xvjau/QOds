@@ -25,7 +25,7 @@
 
 #include "Attr.hpp"
 #include "Attrs.hpp"
-#include "dso.hxx"
+#include "global.hxx"
 #include "Node.hpp"
 #include "Prefix.hpp"
 #include "tag.hh"
@@ -38,7 +38,7 @@ class Base;
 class Node;
 class Ns;
 
-class ODS_DSO_SHARE Tag
+class ODS_API Tag
 {
 	static const quint8 kUsed	= 1;
 	static const quint8 kXmlNs	= 2;
