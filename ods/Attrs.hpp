@@ -24,7 +24,7 @@
 #define ODS_ATTRS_HPP_
 
 #include "global.hxx"
-#include <mtl/err.hpp>
+#include "err.hpp"
 #include <QXmlStreamAttributes>
 
 class QXmlStreamReader;

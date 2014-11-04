@@ -23,9 +23,9 @@
 #ifndef ODS_STYLE_MANAGER_HPP_
 #define ODS_STYLE_MANAGER_HPP_
 
+#include "../err.hpp"
 #include "../global.hxx"
 #include "../ods.hxx"
-#include <mtl/err.hpp>
 #include <QString>
 #include <QXmlStreamReader>
 

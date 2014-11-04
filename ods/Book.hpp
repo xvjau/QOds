@@ -25,6 +25,7 @@
 #include "global.hxx"
 #include "Content.hpp"
 #include "Duration.hpp"
+#include "err.hpp"
 #include "ods.hh"
 #include "tag.hxx"
 #include <QDateTime>

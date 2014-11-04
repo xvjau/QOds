@@ -26,7 +26,7 @@
 #include "global.hxx"
 #include "ns.hxx"
 #include "ods.hxx"
-#include <mtl/err.hpp>
+#include "err.hpp"
 #include <QFile>
 #include <QHash>
 #include <QString>

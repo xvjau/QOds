@@ -3,15 +3,13 @@
 # .hh, .cc:  namespace with functions
 # .cpp, hpp: classes
 # .hxx:      (const) declarations
-
+message(STATUS ${CMAKE_CURRENT_LIST_FILE})
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 
 include_directories(${QOds_SOURCE_DIR})
-include_directories(${QOds_SOURCE_DIR}/mtl)
-link_directories(${QOds_BINARY_DIR}/mtl)
 link_directories(${QOds_BINARY_DIR}/quazip)
 
 add_definitions(-std=c++11 -DODS_BUILDING)

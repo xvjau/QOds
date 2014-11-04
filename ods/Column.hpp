@@ -24,7 +24,7 @@
 #define ODS_COLUMN_HPP_
 
 #include "global.hxx"
-#include <mtl/err.hpp>
+#include "err.hpp"
 
 namespace ods	{ // ods::
 

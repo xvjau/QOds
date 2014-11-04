@@ -25,7 +25,7 @@
 
 #include "global.hxx"
 
-#include <mtl/err.hpp>
+#include "err.hpp"
 #include <QByteArray>
 #include <QFile>
 #include <QXmlStreamReader>

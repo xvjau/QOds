@@ -24,11 +24,10 @@
 #define ODS_data_HPP_
 
 #include "cell.hxx"
+#include "err.hpp"
 #include "global.hxx"
 #include "ods.hh"
 #include "ods.hxx"
-
-#include <mtl/err.hpp>
 
 #include <QString>
 #include <QXmlStreamAttributes>

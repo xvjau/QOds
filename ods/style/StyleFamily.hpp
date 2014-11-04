@@ -23,7 +23,7 @@
 #ifndef ODS_STYLE_STYLEFAMILY_HPP_
 #define ODS_STYLE_STYLEFAMILY_HPP_
 
-#include <mtl/err.hpp>
+#include "../err.hpp"
 #include "../global.hxx"
 #include "../ods.hxx"
 

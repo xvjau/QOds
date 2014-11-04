@@ -24,12 +24,12 @@
 #define ODS_NS_HPP_
 
 #include "Attr.hpp"
+#include "err.hpp"
 #include "global.hxx"
 #include "ns.hxx"
 #include "ods.hxx"
 #include "Prefix.hpp"
 #include "Tag.hpp"
-#include <mtl/err.hpp>
 #include <QMap>
 #include <QXmlStreamReader>
 

@@ -26,8 +26,6 @@
 #include "style/tag.hh"
 #include "Tag.hpp"
 
-#include <mtl/err.hpp>
-
 namespace ods	{ // ods::
 namespace tag	{ // ods::tag::
 

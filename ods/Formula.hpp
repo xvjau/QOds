@@ -24,9 +24,9 @@
 #define ODS_FORMULA_HPP_
 
 #include "cell.hxx"
+#include "err.hpp"
 #include "global.hxx"
 #include "Value.hpp"
-#include <mtl/err.hpp>
 #include <QByteArray>
 #include <QString>
 #include <QStringRef>

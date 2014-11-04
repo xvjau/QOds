@@ -1,4 +1,5 @@
 #cmake_minimum_required(VERSION 2.4.4)
+message(STATUS ${CMAKE_CURRENT_LIST_FILE})
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
 
 # Find includes in corresponding build directories

@@ -24,7 +24,6 @@
 #define ODS_UTIL_HH_
 
 #include "global.hxx"
-#include <mtl/err.hpp>
 
 namespace ods	{ // ods::
 namespace util	{ // ods::util::

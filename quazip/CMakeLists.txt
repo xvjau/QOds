@@ -1,3 +1,5 @@
+message(STATUS ${CMAKE_CURRENT_LIST_FILE})
+
 add_definitions(-std=c++11 -DQUAZIP_BUILD)
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

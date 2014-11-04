@@ -20,8 +20,6 @@
  * OF THIS SOFTWARE.
  */
  
- #include "global.hxx"
-
 #ifndef MTL_ERR_HPP_
 #define MTL_ERR_HPP_
 

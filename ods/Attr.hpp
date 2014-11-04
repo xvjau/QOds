@@ -26,7 +26,7 @@
 
 #include "global.hxx"
 #include "Prefix.hpp"
-#include <mtl/err.hpp>
+#include "err.hpp"
 
 class QXmlStreamAttributes;
 class QXmlStreamWriter;

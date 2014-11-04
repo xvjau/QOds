@@ -22,7 +22,6 @@
 
 #include "Ns.hpp"
 #include "ods.hxx"
-#include <mtl/err.hpp>
 #include <QXmlStreamNamespaceDeclarations>
 
 namespace ods	{ // ods::

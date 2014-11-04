@@ -1,4 +1,4 @@
-message(STATUS "PROCESSING ${CMAKE_CURRENT_LIST_FILE}")
+message(STATUS ${CMAKE_CURRENT_LIST_FILE})
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

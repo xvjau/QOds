@@ -23,9 +23,9 @@
 #ifndef ODS_META_HPP_
 #define ODS_META_HPP_
 
+#include "err.hpp"
 #include "global.hxx"
 #include "Duration.hpp"
-#include <mtl/err.hpp>
 #include <QDateTime>
 #include <QFile>
 #include <QMap>

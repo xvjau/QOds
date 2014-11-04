@@ -23,9 +23,9 @@
 #ifndef ODS_NODE_HPP_
 #define ODS_NODE_HPP_
 
+#include "err.hpp"
 #include "global.hxx"
 #include "node.hxx"
-#include <mtl/err.hpp>
 
 namespace ods	{ // ods::
 class Tag;

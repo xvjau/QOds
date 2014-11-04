@@ -23,8 +23,8 @@
 #ifndef ODS_SETTINGS_HPP_
 #define ODS_SETTINGS_HPP_
 
+#include "err.hpp"
 #include "global.hxx"
-#include <mtl/err.hpp>
 
 namespace ods	{ // ods::
 

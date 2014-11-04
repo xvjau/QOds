@@ -23,10 +23,10 @@
 #ifndef ODS_STYLE_HPP_
 #define ODS_STYLE_HPP_
 
+#include "err.hpp"
 #include "global.hxx"
 #include "ods.hxx"
 #include "tag.hxx"
-#include <mtl/err.hpp>
 #include <QColor>
 
 namespace ods	{ // ods::
