@@ -3,6 +3,10 @@
 <meta charset="UTF-8">
 <title>How to build QOds</title>
 <style>
+
+.note {
+	text-decoration: underline;
+}
 .parag {
 	font-size: 14px;
 	color: rgb(0, 0, 255);
@@ -31,9 +35,24 @@ body {
 <div style="text-align:center">
 <b>How to build QOds</b><p/>
 </div>
-Note: Since Nov 2014 QOds comes with its own copy of zlib to make
-the building process (a lot) easier.
+<span class="note">Note 1:</span>
+<span style="color:rgb(200,0,0);font-weight:bold">
+Shared libraries</span> are built by default, to build
+<span style="color:rgb(200,0,0);font-weight:bold">static libraries</span>
+uncomment the line<br/>
+<b>#set (BUILD_STATIC_LIBRARIES "1")</b><br/>
+from QOds/CMakeLists.txt.
+</span><p/>
 
+<span class="note">Note 2:</span> After compilation the resulting
+libraries are to be found in QOds/build/lib. The example code from "app" in
+QOds/build/app.
+<p/>
+
+<span class="note">Note 3:</span> Since Nov 2014 QOds comes with its own
+copy of <a href="http://www.zlib.net">zlib</a> to make the building
+process (a lot) easier.<p/>
+<br/><br/>
 <div class="parag">Prerequisites, all OSes</div>
 <ol>
 <li>Obviously, make sure you have Qt 5.x installed and a C++11
@@ -67,17 +86,14 @@ A few notes before compilation:<p/>
 <b>Note 1:</b> Tested on Win7 and Win8.1<p/>
 
 <b>Note 2:</b> The QOds library depends on and is built together with the libraries it depends
-on besides Qt. Hence, after QOds is built, it's comprised of these files, starting from QOds/build folder:
+on besides Qt. Hence, after QOds is built, it's comprised of these files:
 <pre>
-[-]ods
-    [-]Release
-        ods.dll (the actual QOds library)
-[-]quazip
-    [-]Release
-        quazip.dll (high level zip/unzip library QOds depends on)
-[-]zlib
-    [-]Release
-        zlib.dll (low level library quazip depends on)
+[-]build
+    [-]lib
+        [-]Release
+            ods.dll -&gt; the actual QOds library
+            quazip.dll -&gt; high level zip/unzip library QOds depends on
+            zlib.dll -&gt; low level library quazip depends on
 </pre>
 
 Back to compilation:<br/>
@@ -112,7 +128,7 @@ Then:
 <i>cmake -G "Visual Studio 12 2013 Win64" ..</i>
 
 </li>
-<li>Done. Look into the "build" dir, the files should be there, particularly
+<li>Done. Look into the "build/lib" dir, the files should be there, particularly
 the "project" file QOds.sln. You know what to do next.</li>
 </ul>
 

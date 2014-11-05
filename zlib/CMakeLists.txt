@@ -7,6 +7,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 
+link_directories(${QOds_BINARY_DIR}/lib)
+
 #project(zlib C)
 
 set(VERSION "1.2.8")
@@ -163,7 +165,15 @@ if(MINGW)
     set(ZLIB_DLL_SRCS ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj)
 endif(MINGW)
 
-add_library(zlib SHARED ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
+
+if (DEFINED ZLIB_STATIC)
+	set(lib_type STATIC)
+else (DEFINED ZLIB_STATIC)
+	set(lib_type SHARED)
+endif (DEFINED ZLIB_STATIC)
+
+add_library(zlib ${lib_type} ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_DLL_SRCS}
+	 ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
 set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
 set_target_properties(zlib PROPERTIES SOVERSION 1)
 

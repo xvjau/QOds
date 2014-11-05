@@ -6,13 +6,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
 include_directories(${QOds_SOURCE_DIR})
-include_directories(${QOds_SOURCE_DIR}/mtl)
-include_directories(${QOds_SOURCE_DIR}/ods)
+link_directories(${CMAKE_BINARY_DIR}/lib)
 
-link_directories(${QOds_BINARY_DIR}/ods)
-link_directories(${QOds_BINARY_DIR}/mtl)
-
-add_definitions(-std=c++11)
+if (NOT MSVC)
+	add_definitions(-std=c++11)
+endif (NOT MSVC)
 
 # Set some Win32 Specific Settings
 if(WIN32)
@@ -33,4 +31,4 @@ foreach(f IN LISTS src_files)
 endforeach()
 
 add_executable(ods_test ${GUI_TYPE} ${src_files})
-target_link_libraries(ods_test Qt5::Core Qt5::Gui ods)
+target_link_libraries(ods_test ods quazip zlib Qt5::Core Qt5::Gui)

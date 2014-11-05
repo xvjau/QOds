@@ -10,9 +10,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
 include_directories(${QOds_SOURCE_DIR})
-link_directories(${QOds_BINARY_DIR}/quazip)
+link_directories(${QOds_BINARY_DIR}/lib)
 
-add_definitions(-std=c++11 -DODS_BUILDING)
+if (NOT MSVC)
+	add_definitions(-std=c++11)
+endif (NOT MSVC)
 
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
@@ -28,7 +30,14 @@ foreach(f IN LISTS lib_files)
 		COMPILE_DEFINITIONS "SRC_FILE_NAME=\"${b}\"")
 endforeach()
 
-add_library(ods SHARED ${lib_files})
+if (DEFINED ODS_STATIC)
+	set(lib_type STATIC)
+else (DEFINED ODS_STATIC)
+	set(lib_type SHARED)
+	add_definitions(-DODS_SHARED -DODS_BUILDING)
+endif (DEFINED ODS_STATIC)
+
+add_library(ods ${lib_type} ${lib_files})
 target_link_libraries(ods quazip Qt5::Core Qt5::Gui)
 
 

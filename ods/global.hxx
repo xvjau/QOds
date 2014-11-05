@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 f35f22fan@gmail.com
+ * Copyright Â© 2014 f35f22fan@gmail.com
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -20,15 +20,20 @@
  * OF THIS SOFTWARE.
  */
 
+
 #ifndef ODS_GLOBAL_HXX_
 #define ODS_GLOBAL_HXX_
 
 #include <QtCore/QtGlobal>
 
-#ifdef ODS_BUILDING
-	#define ODS_API Q_DECL_EXPORT
+#ifdef ODS_SHARED
+	#if defined (ODS_BUILDING)
+		#define ODS_API Q_DECL_EXPORT
+	#else
+		#define ODS_API Q_DECL_IMPORT
+	#endif
 #else
-	#define ODS_API Q_DECL_IMPORT
+	#define ODS_API 
 #endif
 
 #endif

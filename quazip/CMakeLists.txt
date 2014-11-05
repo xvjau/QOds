@@ -1,6 +1,9 @@
 message(STATUS ${CMAKE_CURRENT_LIST_FILE})
 
-add_definitions(-std=c++11 -DQUAZIP_BUILD)
+if (NOT MSVC)
+	add_definitions(-std=c++11)
+endif (NOT MSVC)
+
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
@@ -8,9 +11,8 @@ set(CMAKE_AUTOMOC ON)
 
 include_directories(${QOds_SOURCE_DIR})
 include_directories(${QOds_SOURCE_DIR}/zlib)
-
 link_directories(${QOds_BINARY_DIR})
-link_directories(${QOds_BINARY_DIR}/zlib)
+link_directories(${QOds_BINARY_DIR}/lib)
 
 
 find_package(Qt5Core REQUIRED)
@@ -26,6 +28,13 @@ file(GLOB_RECURSE src_files
 	"*.h" "*.hh" "*.hpp" "*.hxx"
 	"*.c" "*.cc" "*.cpp")
 
-add_library(quazip SHARED ${src_files})
+if (DEFINED QUAZIP_STATIC)
+	set(lib_type STATIC)
+else (DEFINED QUAZIP_STATIC)
+	set(lib_type SHARED)
+	add_definitions(-DQUAZIP_SHARED -DQUAZIP_BUILD)
+endif (DEFINED QUAZIP_STATIC)
+
+add_library(quazip ${lib_type} ${src_files})
 #set_target_properties(quazip PROPERTIES VERSION 1.0.0 SOVERSION 1)
 target_link_libraries(quazip Qt5::Core zlib)
