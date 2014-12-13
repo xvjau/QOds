@@ -46,6 +46,7 @@ ODS_API ods::Tag*	DrawImage(ods::Ns&, ods::Tag*);
 ODS_API ods::Tag*	Manifest(ods::Ns&, ods::Tag*);
 ODS_API ods::Tag*	ManifestFileEntry(ods::Ns&, ods::Tag*);
 ODS_API ods::Tag*	Number(ods::Ns&, ods::Tag*);
+ODS_API ods::Tag*	NumberPercentageStyle(ods::Ns&, ods::Tag*);
 ODS_API ods::Tag*	NumberText(ods::Ns&, ods::Tag*);
 ODS_API ods::Tag*	OfficeBody(ods::Ns&, ods::Tag*);
 ODS_API ods::Tag*	OfficeDocContent(ods::Ns&, ods::Tag*);

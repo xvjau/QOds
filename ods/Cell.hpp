@@ -121,6 +121,9 @@ public:
 	
 	void
 	SetNumColsRepeated(const qint32 num);
+
+	void
+	SetPercentageValue(const double d, const qint8 decimal_places = 0);
 	
 	void //@@@HasDoc
 	SetRowColSpan(const quint16, const quint16);
@@ -150,7 +153,7 @@ public:
 	UpdateAll() { UpdateValue(); }
 	
 	void
-	UpdateValue() { mtl_line("Should not be called"); };
+	UpdateValue() { mtl_line("Should not be called"); }
 	
 	qint32
 	UpToColumn() const { return col_start_ +

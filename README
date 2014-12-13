@@ -4,12 +4,12 @@ Spreadsheet) files.
 See "how_to_build.html" for how to build for Windows
 with MinGW or Visual Studio 2013.
 
-Results tested on MS Office 2013, LibreOffice, and Calligra Sheets.
+Results tested on MS Office 2013, LibreOffice and Calligra Sheets.
 
 For a simple tutorial check the code in app/main.cpp which also shows
 how to create a sample invoice with formulas and (png) logos.
 
 The resulting sample invoice file created programmatically with QOds
-can be viewed in the "app" subfolder, it's called "Invoice.ods".
+can be viewed at "app/Invoice.ods".
 
-For questions etc: f35f22fan@gmail.com
+For questions, feature requests, bug reports, etc: f35f22fan@gmail.com

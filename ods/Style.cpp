@@ -24,6 +24,7 @@
 #include "Book.hpp"
 #include "Ns.hpp"
 #include "ods.hh"
+#include "PercentStyle.hpp"
 #include "style/Border.hpp"
 #include "style/Manager.hpp"
 #include "style/style.hxx"
@@ -74,6 +75,27 @@ Style::FontSizeInInches()
 	if (font_size_type_ == ods::FontSizeType::Cm)
 		return font_size_ * ods::kInchesInACm;
 	return font_size_ * ods::kInchesInAPoint;
+}
+
+ods::PercentStyle*
+Style::GetPercentStyle()
+{
+	if (percent_style_ != nullptr)
+		return percent_style_;
+	
+	auto &ns = tag_->ns();
+	const QString *name = tag_->GetAttrString(ns.style(),
+		ods::ns::kDataStyleName);
+	if (name == nullptr)
+		return nullptr;
+	
+	auto *percent_style = book_->GetPercentStyle(*name);
+	if (percent_style == nullptr)
+	{
+		mtl_line("Got style name, but not found");
+		return nullptr;
+	}
+	return percent_style;
 }
 
 void
@@ -262,10 +284,8 @@ Style::SetFontWeight(const ods::FontWeight w)
 void
 Style::SetItalic(const bool flag)
 {
-	if (flag)
-		SetFontStyle(ods::FontStyle::Italic);
-	else
-		SetFontStyle(ods::FontStyle::Normal);
+	const auto t = flag ? ods::FontStyle::Italic : ods::FontStyle::Normal;
+	SetFontStyle(t);
 }
 
 void
@@ -282,9 +302,17 @@ Style::SetOptimalRowHeight(const double size, const ods::FontSizeType tp)
 void
 Style::SetParentStyle(ods::Style *style)
 {
+	parent_style_ = style;
 	// style:parent-style-name
 	tag_->AttrSet(tag_->ns().style(), ods::style::kParentStyleName,
 		style->name());
+}
+
+void
+Style::SetPercentStyle(ods::PercentStyle *pst)
+{
+	percent_style_ = pst;
+	tag_->AttrSet(tag_->ns().style(), ods::ns::kDataStyleName, pst->name());
 }
 
 void

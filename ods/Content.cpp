@@ -26,6 +26,7 @@
 #include "filename.hxx"
 #include "Node.hpp"
 #include "Ns.hpp"
+#include "PercentStyle.hpp"
 #include "Row.hpp"
 #include "Sheet.hpp"
 #include "Style.hpp"
@@ -46,8 +47,8 @@ Content::Content(ods::Book *book) :
 {
 	if (book_->extracted())
 		Read();
-	else
-		InitDefault();
+	//else
+		//InitDefault();
 }
 
 Content::~Content()
@@ -69,14 +70,31 @@ Content::CreateSheet(const QString &sheet_name)
 }
 
 void
+Content::InitAutomaticStyles()
+{
+	/**
+	for (int i = 0; i <= 2; i++)
+	{
+		auto *pst = book_->CreatePercentStyle(ods::StylePlace::ContentFile);
+		pst->SetDecimalPlaces(i);
+	}
+	**/
+}
+
+void
 Content::InitDefault()
 {
+	if (ns_ != nullptr)
+		return;
+	
 	ns_ = new ods::Ns(ods::UriId::Office);
 	auto &ns = *ns_;
 	doc_content_ = ods::tag::OfficeDocContent(ns, nullptr);
-	office_body_ = ods::tag::OfficeBody(ns, nullptr);
 	
-	InitFontFaceDecls();
+	font_face_decls_tag_ = ods::style::tag::FontFaceDecls(ns, nullptr);
+	doc_content_->SubtagAdd(font_face_decls_tag_);
+	
+	office_body_ = ods::tag::OfficeBody(ns, nullptr);
 	
 	automatic_styles_tag_ = ods::style::tag::AutomaticStyles(ns, nullptr);
 	doc_content_->SubtagAdd(automatic_styles_tag_);
@@ -92,14 +110,8 @@ Content::InitDefault()
 	tag->AttrSet(ns.sheet(), ods::ns::kUseWildcards, ods::ns::kTrue);
 	tag->AttrSet(ns.sheet(), ods::ns::kUseRegularExpressions, ods::ns::kFalse);
 	tag->AttrSet(ns.sheet(), ods::ns::kAutomaticFindLabels, ods::ns::kFalse);
-}
 
-void
-Content::InitFontFaceDecls()
-{
-	auto &ns = *ns_;
-	font_face_decls_tag_ = ods::style::tag::FontFaceDecls(ns, nullptr);
-	doc_content_->SubtagAdd(font_face_decls_tag_);
+	InitAutomaticStyles();
 }
 
 void

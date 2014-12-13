@@ -101,6 +101,7 @@ ods_const kPageCount			= "page-count";
 ods_const kPageNumber			= "page-number";
 ods_const kPageUsage			= "page-usage";
 ods_const kPercentage			= "percentage";
+ods_const kPercentageStyle		= "percentage-style";
 ods_const kSearchWholeCell		= "search-criteria-must-apply-to-whole-cell";
 ods_const kSettings				= "settings";
 ods_const kSheet				= "table";

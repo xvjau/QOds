@@ -24,26 +24,28 @@
 #include <QtCore>
 #include "Invoice.hpp"
 
+// ==> Utility functions
 void
 Save(ods::Book&);
+
+void
+PrintOut(ods::Sheet *sheet, const qint32 kRowIndex, const qint32 kColIndex);
+// <== Utility functions
 
 void
 Lesson1CreateEmptyBook()
 {
 	ods::Book book;
-	auto *sheet = book.CreateSheet("name");
+	auto *sheet = book.CreateSheet("Sheet1");
 	auto *row = sheet->CreateRow(0); // create first/top row
+
+	// Column (cell) count is zero-based, e.g. 0 = 1, 4 = 5.
 	
-	// Indices are zero based.
-	// Create a cell at index 0
+	// Cell with a string value of "cell at 0"
+	// Create a cell at column 0 (first column)
 	auto *cell = row->CreateCell(0);
 	cell->SetValue("cell at 0");
-	
-	// another cell, at index 5,
-	// since it's zero based it's the 6th cell (column)
-	cell = row->CreateCell(5);
-	cell->SetValue("cell at 5");
-	
+
 	Save(book);
 }
 
@@ -51,7 +53,7 @@ void
 Lesson2CreateCellsOfDifferentTypes()
 {
 	ods::Book book;
-	auto *sheet = book.CreateSheet("name");
+	auto *sheet = book.CreateSheet("Sheet1");
 	auto *row = sheet->CreateRow(0);
 	
 	auto *cell = row->CreateCell(0);
@@ -63,6 +65,18 @@ Lesson2CreateCellsOfDifferentTypes()
 	// Note: internally the API stores/uses numbers as doubles, but the
 	// ODF standard seems to use/store as floats
 	cell->SetValue(3.14);
+	
+	// Cell with percentage value
+	cell = row->CreateCell(2);
+	cell->SetPercentageValue(0.8, 2); // 0.8 = 80.00%, second param (2) is
+	// the number of leading zeroes after the dot, in this case
+	// it's ".00" from "80.00%"
+	
+	// Cell with another percentage value
+	cell = row->CreateCell(3);
+	cell->SetPercentageValue(17.2); // 17.2 = 1720%, the second param
+	// by default is zero, hence it'll will show up as "1720%" and not
+	// as "1720.0%" or "1720.00%".
 	
 	Save(book);
 }
@@ -276,25 +290,36 @@ Lesson10ReadFile()
 	auto path = QDir(QDir::homePath()).filePath("ReadFile.ods");
 	ods::Book book(path);
 	
-	// display value of cell at row kRowIndex and column kColIndex:
-	const int kRowIndex = 5;
-	const int kColIndex = 2;
+	// print out the value of cell at given row and column indexes:
 	auto *sheet = book.sheet(0);
 	if (sheet == nullptr)
 	{
 		qDebug() << "No sheet at 0";
 		return;
 	}
+	
+	PrintOut(sheet, 0, 2); // zero-based, hence: row 1, col 3
+	PrintOut(sheet, 0, 1); // row 1, col 2
+	PrintOut(sheet, 1, 1); // row 2, col 2
+	PrintOut(sheet, 0, 0); // row 1, col 1
+}
+
+void
+PrintOut(ods::Sheet *sheet, const qint32 kRowIndex, const qint32 kColIndex)
+{
+	qDebug().nospace() << "Querying cell at row/col: "
+		<< kRowIndex << "/" << kColIndex;
+	
 	auto *row = sheet->row(kRowIndex);
 	if (row == nullptr)
 	{
-		qDebug() << "No row at" << kRowIndex;
+		qDebug() << "No row at" << kRowIndex << "\n";
 		return;
 	}
 	auto *cell = row->cell(kColIndex);
 	if (cell == nullptr)
 	{
-		qDebug() << "No cell at" << kColIndex;
+		qDebug() << "No cell at" << kColIndex << "\n";
 		return;
 	}
 	
@@ -307,11 +332,15 @@ Lesson10ReadFile()
 		const ods::Value &value = cell->value();
 		if (value.IsDouble())
 			qDebug() << "Cell value as double:" << *value.AsDouble();
+		else if (value.IsPercentage())
+			qDebug() << "Cell value as percentage: " << *value.AsPercentage();
 		else if (value.IsString())
 			qDebug() << "Cell value as string:" << *value.AsString();
 		else
 			qDebug() << "Unknown cell type";
+		
 	}
+	qDebug() << "\n";
 }
 
 int
@@ -323,6 +352,8 @@ main(int argc, char *argv[])
 		<< ods::version_minor();
 	
 	Lesson9CreateSampleInvoice();
+	// Lesson1CreateEmptyBook();
+	// Lesson2CreateCellsOfDifferentTypes();
 	return 0;
 }
 
@@ -332,8 +363,8 @@ Save(ods::Book &book)
 	auto path = QDir(QDir::homePath()).filePath("file.ods");
 	QFile target(path);
 	QString err = book.Save(target);
-	if (!err.isEmpty())
-		qDebug() << "Error saving ods file:" << err;
-	else
+	if (err.isEmpty())
 		qDebug() << "Saved to" << target.fileName();
+	else
+		qDebug() << "Error saving ods file:" << err;
 }

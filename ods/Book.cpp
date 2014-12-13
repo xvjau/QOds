@@ -26,6 +26,7 @@
 #include "filename.hxx"
 #include "Manifest.hpp"
 #include "Meta.hpp"
+#include "PercentStyle.hpp"
 #include "Row.hpp"
 #include "Settings.hpp"
 #include "Sheet.hpp"
@@ -34,6 +35,7 @@
 #include "style/tag.hh"
 #include "style/StyleFamily.hpp"
 #include "Tag.hpp"
+#include "tag.hh"
 #include <QFile>
 #include <QXmlStreamWriter>
 #include <quazip/JlCompress.h>
@@ -59,9 +61,10 @@ Book::~Book()
 	delete meta_;
 	delete settings_;
 	delete style_manager_;
-	
-	foreach (auto *style, styles_)
-		delete style;
+	foreach (auto *item, percent_styles_)
+		delete item;
+	foreach (auto *item, styles_)
+		delete item;
 }
 
 void
@@ -89,6 +92,20 @@ Book::Add(ods::DrawFrame *df)
 	manifest_->Add(df);
 }
 
+ods::PercentStyle*
+Book::CreatePercentStyle(const ods::StylePlace place)
+{
+	if (content_ == nullptr)
+		InitDefault();
+	auto *percent_style = new ods::PercentStyle(this, place);
+	percent_styles_.append(percent_style);
+	auto *parent_tag = (place == ods::StylePlace::StylesFile) ?
+		style_manager_->styles_tag() : content_->automatic_styles_tag();
+	auto *tag = percent_style->tag();
+	parent_tag->subnodes().append(new ods::Node(tag));
+	return percent_style;
+}
+
 ods::Sheet*
 Book::CreateSheet(const QString &sheet_name)
 {
@@ -101,13 +118,14 @@ ods::Style*
 Book::CreateStyle(const ods::StyleFamilyId id, const ods::StylePlace place,
 	ods::tag::func func)
 {
-	if (content_ == nullptr)
+	if (content_ == nullptr || style_manager_ == nullptr)
 		InitDefault();
-	auto &ns = *content_->ns();
+	auto &ns = content_->ns();
 	auto *tag = func(ns, nullptr);
 	auto *family = new ods::style::StyleFamily(id);
 	auto *style = new ods::Style(this, tag, family, place);
 	styles_.append(style);
+
 	ods::Tag *style_parent_tag;
 	if (id == ods::StyleFamilyId::Sheet || id == ods::StyleFamilyId::Row)
 		style_parent_tag = content_->automatic_styles_tag();
@@ -115,6 +133,7 @@ Book::CreateStyle(const ods::StyleFamilyId id, const ods::StylePlace place,
 		style_parent_tag = style_manager_->styles_tag();
 	else
 		style_parent_tag = content_->automatic_styles_tag();
+
 	style_parent_tag->subnodes().append(new ods::Node(tag));
 	return style;
 }
@@ -140,6 +159,30 @@ Book::GetMediaDirPath()
 	return &media_dir_path_;
 }
 
+ods::PercentStyle*
+Book::GetPercentStyle(const qint8 decimal_places)
+{
+	foreach (auto *item, percent_styles_)
+	{
+		if (decimal_places == item->decimal_places())
+			return item;
+	}
+	return nullptr;
+}
+
+ods::PercentStyle*
+Book::GetPercentStyle(const QString &name, const qint8 decimal_places)
+{
+	foreach (auto *item, percent_styles_)
+	{
+		if (decimal_places >= 0 && decimal_places != item->decimal_places())
+			continue;
+		if (name == item->name())
+			return item;
+	}
+	return nullptr;
+}
+
 ods::Style*
 Book::GetStyle(const QString &name, const ods::StyleFamilyId id)
 {
@@ -156,12 +199,13 @@ Book::GetStyle(const QString &name, const ods::StyleFamilyId id)
 void
 Book::InitDefault()
 {
-	style_manager_ = new ods::style::Manager(this);
 	content_ = new ods::Content(this);
+	style_manager_ = new ods::style::Manager(this);
+	
 	meta_ = new ods::Meta(this);
 	manifest_ = new ods::Manifest(this);
-	
-	style_manager_->InitDefaultStyles();
+	content_->InitDefault();
+	style_manager_->InitDefault();
 }
 
 void
@@ -202,37 +246,39 @@ Book::Save(const QFile &target)
 	QString save_dir = temp_dir_.path();
 	SaveMimeTypeFile(save_dir);
 	QString err;
-	
+
 	if (content_ != nullptr)
 		content_->Save(save_dir, err);
 	if (!err.isEmpty())
 		return err;
-	
+
 	if (style_manager_ != nullptr)
 		style_manager_->Save(save_dir, err);
 	if (!err.isEmpty())
 		return err;
-	
+
 	if (manifest_ != nullptr)
 		manifest_->Save(save_dir, err);
 	if (!err.isEmpty())
 		return err;
-	
+
 	if (meta_ != nullptr)
 		meta_->Save(save_dir, err);
 	if (!err.isEmpty())
 		return err;
-	
-	if (settings_ != nullptr) {
+
+	if (settings_ != nullptr)
+	{
 		settings_->Save(save_dir, err);
 		if (!err.isEmpty())
 			return err;
 	}
-	
+
 	QString ods_path = target.fileName();
 	if (!JlCompress::compressDir(ods_path, save_dir))
 		return "Failed to compress dir";
-	return "";
+
+	return err;
 }
 
 void

@@ -61,8 +61,11 @@ public:
 	const QString&
 	err() const { return err_; }
 	
-	ods::Ns*
-	ns() const { return ns_; }
+	void
+	InitDefault();
+	
+	ods::Ns&
+	ns() const { return *ns_; }
 	
 	void
 	Save(const QString &save_dir, QString &err);
@@ -83,11 +86,8 @@ private:
 	NO_ASSIGN_COPY_MOVE(Content);
 	
 	void
-	InitDefault();
-	
-	void
-	InitFontFaceDecls();
-	
+	InitAutomaticStyles();
+
 	void
 	PreSave();
 	

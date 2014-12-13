@@ -24,6 +24,7 @@
 #define ODS_BOOK_HPP_
 #include "global.hxx"
 #include "Content.hpp"
+#include "decl.hxx"
 #include "Duration.hpp"
 #include "err.hpp"
 #include "ods.hh"
@@ -36,13 +37,6 @@
 class QXmlStreamWriter;
 
 namespace ods	{
-
-class DrawFrame;
-class Manifest;
-class Meta;
-class Settings;
-class Sheet;
-class Style;
 
 namespace style	{ // ods::style::
 class Manager;
@@ -63,6 +57,10 @@ public:
 	
 	ods::Style*
 	CreateCellStyle() { return CreateStyle(ods::StyleFamilyId::Cell); }
+	
+	ods::PercentStyle*
+	CreatePercentStyle(const ods::StylePlace place
+		= ods::StylePlace::ContentFile);
 	
 	ods::Style*
 	CreateRowStyle() { return CreateStyle(ods::StyleFamilyId::Row); }
@@ -98,6 +96,12 @@ public:
 	
 	QString*
 	GetMediaDirPath();
+	
+	ods::PercentStyle*
+	GetPercentStyle(const QString &name, const qint8 decimal_places = -1);
+	
+	ods::PercentStyle*
+	GetPercentStyle(const qint8 decimal_places);
 	
 	ods::Style*
 	GetStyle(const QString &name, const ods::StyleFamilyId id);
@@ -158,6 +162,7 @@ private:
 	ods::Settings			*settings_ = nullptr;
 	ods::style::Manager		*style_manager_ = nullptr;
 	QVector<ods::Style*>	styles_;
+	QVector<ods::PercentStyle*> percent_styles_;
 	QTemporaryDir			temp_dir_;
 };
 

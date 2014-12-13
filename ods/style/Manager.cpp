@@ -42,8 +42,8 @@ Manager::Manager(ods::Book *book) :
 {
 	if (book_->extracted())
 		Read();
-	else
-		InitDefault();
+	//else
+	//	InitDefault();
 }
 
 Manager::~Manager()
@@ -60,13 +60,13 @@ Manager::ApplyFontFace(const QString &kFontName, ods::Tag *tag)
 	tag->AttrSet(ns.style(), ods::style::kFontNameAsian, kFontName);
 	tag->AttrSet(ns.style(), ods::style::kFontNameComplex, kFontName);
 	
-	foreach (const QString &name, font_faces_)
+	foreach (const QString &name, font_names_)
 	{
 		if (name == kFontName)
 			return;
 	}
 	
-	font_faces_.append(kFontName);
+	font_names_.append(kFontName);
 	tag = ods::style::tag::FontFace(ns, nullptr);
 	font_face_decls_tag_->SubtagAdd(tag);
 	
@@ -80,46 +80,49 @@ Manager::ApplyFontFace(const QString &kFontName, ods::Tag *tag)
 }
 
 void
-Manager::InitDefault()
-{
-	ns_ = new ods::Ns(ods::UriId::Office);
-	root_tag_ = ods::style::tag::OfficeDocStyles(*ns_, nullptr);
-	
-	InitFontFaceDecls();
-	
-	styles_tag_ = ods::style::tag::Styles(*ns_, nullptr);
-	ods::style::tag::Styles(*ns_, styles_tag_);
-	root_tag_->SubtagAdd(styles_tag_);
-	
-	automatic_styles_tag_ = ods::style::tag::AutomaticStyles(*ns_, nullptr);
-	root_tag_->SubtagAdd(automatic_styles_tag_);
-	
-	master_styles_tag_ = ods::style::tag::MasterStyles(*ns_, nullptr);
-	root_tag_->SubtagAdd(master_styles_tag_);
-}
-
-void
-Manager::InitDefaultStyles()
-{
-	auto *default_style = book_->CreateStyle(ods::StyleFamilyId::Cell,
-		ods::StylePlace::StylesFile, ods::style::tag::DefaultStyle);
-	
-	auto &ns = *ns_;
-	auto *tag = default_style->GetTag(ods::style::tag::ParagraphProps);
-	tag->AttrSet(ns.style(), ods::style::kTabStopDistance,
-		QStringLiteral("0.5in"));
-	
-	tag = default_style->GetTag(ods::style::tag::TextProps);
-	ApplyFontFace("DejaVu Sans", tag);
-}
-
-void
 Manager::InitFontFaceDecls()
 {
 	auto &ns = *ns_;
 	font_face_decls_tag_ = ods::style::tag::FontFaceDecls(ns, nullptr);
 	root_tag_->SubtagAdd(font_face_decls_tag_);
 }
+
+void
+Manager::InitDefault()
+{
+	if (ns_ != nullptr)
+		return;
+	
+	ns_ = new ods::Ns(ods::UriId::Office);
+	root_tag_ = ods::style::tag::OfficeDocStyles(*ns_, nullptr);
+	
+	InitFontFaceDecls();
+
+	styles_tag_ = ods::style::tag::Styles(*ns_, nullptr);
+	ods::style::tag::Styles(*ns_, styles_tag_);
+	root_tag_->SubtagAdd(styles_tag_);
+
+	automatic_styles_tag_ = ods::style::tag::AutomaticStyles(*ns_, nullptr);
+	root_tag_->SubtagAdd(automatic_styles_tag_);
+
+	master_styles_tag_ = ods::style::tag::MasterStyles(*ns_, nullptr);
+	root_tag_->SubtagAdd(master_styles_tag_);
+
+	InitDefaultStyles();
+}
+
+void
+Manager::InitDefaultStyles()
+{
+	auto &ns = *ns_;
+	auto *default_style = book_->CreateStyle(ods::StyleFamilyId::Cell,
+		ods::StylePlace::StylesFile, ods::style::tag::DefaultStyle);
+	
+	auto *tag = default_style->GetTag(ods::style::tag::ParagraphProps);
+	tag->AttrSet(ns.style(), ods::style::kTabStopDistance,
+		QStringLiteral("0.5in"));
+}
+
 
 void
 Manager::Read()
@@ -170,7 +173,6 @@ Manager::Save(const QString &save_dir, QString &err)
 	QXmlStreamWriter xml(&out);
 	book_->WriteStartDocument(xml);
 	root_tag_->Write(xml, err);
-	
 	if (!err.isEmpty()) {
 		out.cancelWriting();
 		mtl_qline(QStringLiteral("Failed: ") + err);

@@ -50,9 +50,11 @@ Value::CopyTo(ods::Value &v)
 	if (data_ == nullptr)
 		return;
 	if (IsDouble())
-		SetDouble(*AsDouble());
+		v.SetDouble(*AsDouble());
 	else if (IsString())
-		SetString(*AsString());
+		v.SetString(*AsString());
+	else if (IsPercentage())
+		v.SetPercentage(*AsPercentage());
 	else
 		mtl_warn("Not implemented");
 }
@@ -62,7 +64,7 @@ Value::DeleteData()
 {
 	if (data_ == nullptr)
 		return;
-	if (IsDouble())
+	if (IsDouble() || IsPercentage())
 		delete AsDouble();
 	else if (IsString())
 		delete AsString();
@@ -93,11 +95,14 @@ Value::Read(ods::Ns &ns, ods::Attrs &attrs)
 		return;
 	}
 	
-	if (IsDouble()) {
+	if (IsDouble() || IsPercentage()) {
 		double num;
 		if (value_attr->ToDouble(num))
-			set(new double(num), ods::Type::Double);
-		else {
+		{
+			const auto value_type = IsDouble() ?
+				ods::Type::Double : ods::Type::Percentage;
+			set(new double(num), value_type);
+		} else {
 			mtl_qline("Failed");
 			type_ = ods::Type::Fail;
 		}
@@ -112,13 +117,11 @@ void
 Value::ReadTextP(ods::Tag *tag)
 {
 	QVector<ods::Node*> &nodes = tag->subnodes();
-//mtl_qline(QString::number(nodes.size()));
 	QString *str = nullptr;
 	foreach (auto *node, nodes)
 	{
 		if (!node->IsString())
 			continue;
-//mtl_qline("");
 		str = node->String();
 		SetString(*str);
 		return;
@@ -132,6 +135,13 @@ Value::SetDouble(const double d)
 	type_ = ods::Type::Double;
 	data_ = new double();
 	*AsDouble() = d;
+}
+
+void
+Value::SetPercentage(const double d)
+{
+	SetDouble(d);
+	type_ = ods::Type::Percentage;
 }
 
 void

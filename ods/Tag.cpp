@@ -178,13 +178,15 @@ void
 Tag::Write(QXmlStreamWriter &xml, QString &err)
 {
 	xml.writeStartElement(attr_->QualifiedName());
+	
 	if (bits_ & kXmlNs)
 		ns_.WriteNamespaces(xml);
 	if (attrs_ != nullptr)
 		attrs_->Write(xml);
-	
-	foreach (auto *node, subnodes_) {
-		if (node->IsTag()) {
+	foreach (auto *node, subnodes_)
+	{
+		if (node->IsTag())
+		{
 			node->Tag()->Write(xml, err);
 			if (!err.isEmpty())
 				return;
@@ -192,7 +194,6 @@ Tag::Write(QXmlStreamWriter &xml, QString &err)
 			xml.writeCharacters(*node->String());
 		}
 	}
-	
 	xml.writeEndElement();
 }
 

@@ -56,7 +56,7 @@ public:
 	err() const { return err_; }
 	
 	void
-	InitDefaultStyles();
+	InitDefault();
 	
 	ods::Ns&
 	ns() { return *ns_; }
@@ -71,7 +71,7 @@ private:
 	NO_ASSIGN_COPY_MOVE(Manager);
 	
 	void
-	InitDefault();
+	InitDefaultStyles();
 	
 	void
 	InitFontFaceDecls();
@@ -83,7 +83,7 @@ private:
 	ods::Tag			*automatic_styles_tag_ = nullptr;
 	ods::Tag			*styles_tag_ = nullptr;
 	ods::Tag			*font_face_decls_tag_ = nullptr;
-	QVector<QString>	font_faces_;
+	QVector<QString>	font_names_;
 	ods::Tag			*master_styles_tag_ = nullptr;
 	ods::Book			*book_ = nullptr;
 	QString				err_;

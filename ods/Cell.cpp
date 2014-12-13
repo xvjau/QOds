@@ -28,6 +28,7 @@
 #include "Node.hpp"
 #include "Ns.hpp"
 #include "ods.hh"
+#include "PercentStyle.hpp"
 #include "Row.hpp"
 #include "Sheet.hpp"
 #include "style/style.hxx"
@@ -225,6 +226,33 @@ Cell::SetNumColsRepeated(const qint32 num)
 }
 
 void
+Cell::SetPercentageValue(const double num, const qint8 decimal_places)
+{
+	auto &ns = tag_->ns();
+	tag_->AttrSet(ns.office(), ods::ns::kValueType, ods::ns::kPercentage);
+	const QString office_value = QString::number(num);
+	tag_->AttrSet(ns.office(), ods::ns::kValue, office_value);
+
+	auto *book = row_->sheet()->book();
+	if (style_ == nullptr)
+	{
+		style_ = book->CreateStyle(ods::StyleFamilyId::Cell,
+			ods::StylePlace::ContentFile);
+		SetStyle(style_);
+	}
+	const qint8 kDecimalPlaces = (decimal_places < 0) ? 0 : decimal_places;
+	auto *percent_style = style_->GetPercentStyle();
+	if (percent_style == nullptr)
+	{
+		percent_style = book->GetPercentStyle(kDecimalPlaces);
+		if (percent_style == nullptr)
+			percent_style = book->CreatePercentStyle(ods::StylePlace::StylesFile);
+		style_->SetPercentStyle(percent_style);
+	}
+	percent_style->SetDecimalPlaces(kDecimalPlaces);
+}
+
+void
 Cell::SetRowColSpan(const quint16 num_rows, const quint16 num_cols)
 {
 	auto *sheet = row_->sheet();
@@ -252,8 +280,15 @@ Cell::SetRowColSpan(const quint16 num_rows, const quint16 num_cols)
 void
 Cell::SetStyle(ods::Style *style)
 {
-	style_ = style;
-	tag_->AttrSet(tag_->ns().sheet(), ods::style::kStyleName, style_->name());
+	if (style_ != nullptr && style_->GetPercentStyle() != nullptr)
+	{
+		qDebug() << "Warning at Cell::SetStyle(..): call cell->SetStyle(..)"
+			<< "before calling cell->SetPercentageValue(..)";
+		style_->SetParentStyle(style);
+	} else {
+		style_ = style;
+		tag_->AttrSet(tag_->ns().sheet(), ods::style::kStyleName, style_->name());
+	}
 }
 
 void

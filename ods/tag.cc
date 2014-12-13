@@ -264,6 +264,20 @@ Number(ods::Ns &ns, ods::Tag *tag)
 }
 
 ods::Tag*
+NumberPercentageStyle(ods::Ns &ns, ods::Tag *tag)
+{
+	if (tag == nullptr) {
+		tag = new ods::Tag(ns, ods::tag::NumberPercentageStyle);
+		tag->attr_set(ns.number(), ods::ns::kPercentageStyle);
+		return tag;
+	}
+	tag->Add(ns.style(), ods::ns::kName);
+	tag->SubfuncAdd(ods::tag::Number);
+	tag->SubfuncAdd(ods::tag::NumberText);
+	return nullptr;
+}
+
+ods::Tag*
 NumberText(ods::Ns &ns, ods::Tag *tag)
 {
 	if (tag == nullptr) {

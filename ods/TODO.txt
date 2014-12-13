@@ -1,4 +1,11 @@
-- Learn to read cell string values
+In Book.cpp, at:
+
+Book::CreateStyle(const ods::StyleFamilyId id, const ods::StylePlace place,
+	ods::tag::func func)
+
+Check why not use the styles tag function (ods::tag::style) directly, so one
+doesn't have to explicitly pass it to the CreateStyle method.
+==============================================================================
 
 
 - ods::Border::SetWidth(str) doesn't work properly on Ms Office 2013.

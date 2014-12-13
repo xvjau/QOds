@@ -53,6 +53,9 @@ public:
 	
 	double*
 	AsDouble() const { return (double*) data_; }
+
+	double*
+	AsPercentage() const { return AsDouble(); }
 	
 	QString*
 	AsString() const { return (QString*) data_; }
@@ -117,6 +120,9 @@ public:
 	
 	void
 	SetDouble(const double d);
+
+	void
+	SetPercentage(const double d);
 	
 	void
 	SetString(const QString &s);

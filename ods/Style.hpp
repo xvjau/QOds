@@ -23,6 +23,7 @@
 #ifndef ODS_STYLE_HPP_
 #define ODS_STYLE_HPP_
 
+#include "decl.hxx"
 #include "err.hpp"
 #include "global.hxx"
 #include "ods.hxx"
@@ -30,11 +31,6 @@
 #include <QColor>
 
 namespace ods	{ // ods::
-
-class Book;
-class Content;
-class Prefix;
-class Tag;
 
 namespace style	{ // ods::style::
 class Border;
@@ -69,11 +65,17 @@ public:
 	void
 	font_size_type_set(const ods::FontSizeType t) { font_size_type_ = t; }
 	
+	ods::PercentStyle*
+	GetPercentStyle();
+	
 	ods::Tag*
 	GetTag(ods::tag::func f);
 	
 	const QString&
 	name() { return name_; }
+	
+	ods::Style*
+	parent_style() const { return parent_style_; }
 	
 	void
 	SetBackgroundColor(const QColor&);
@@ -107,7 +109,10 @@ public:
 	SetOptimalRowHeight(const double, const ods::FontSizeType);
 	
 	void
-	SetParentStyle(ods::Style *style);
+	SetParentStyle(ods::Style*);
+	
+	void
+	SetPercentStyle(ods::PercentStyle*);
 	
 	void
 	SetTextColor(const QColor &color);
@@ -136,6 +141,8 @@ private:
 	double					font_size_ = -1.0;
 	ods::FontSizeType		font_size_type_ = ods::FontSizeType::NotSet;
 	QString					name_;
+	ods::Style				*parent_style_ = nullptr;
+	ods::PercentStyle		*percent_style_ = nullptr;
 	ods::StylePlace			place_;
 	ods::style::StyleFamily	*style_family_ = nullptr;
 	ods::Tag				*tag_ = nullptr;
