@@ -121,7 +121,10 @@ public:
 	
 	void
 	SetNumColsRepeated(const qint32 num);
-
+	
+	void
+	SetPercentageType(const qint8 decimal_places = 0);
+	
 	void
 	SetPercentageValue(const double d, const qint8 decimal_places = 0);
 	

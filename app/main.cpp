@@ -33,7 +33,7 @@ PrintOut(ods::Sheet *sheet, const qint32 kRowIndex, const qint32 kColIndex);
 // <== Utility functions
 
 void
-Lesson1CreateEmptyBook()
+Lesson1_CreateEmptyBook()
 {
 	ods::Book book;
 	auto *sheet = book.CreateSheet("Sheet1");
@@ -50,7 +50,7 @@ Lesson1CreateEmptyBook()
 }
 
 void
-Lesson2CreateCellsOfDifferentTypes()
+Lesson2_CreateCellsOfDifferentTypes()
 {
 	ods::Book book;
 	auto *sheet = book.CreateSheet("Sheet1");
@@ -82,7 +82,7 @@ Lesson2CreateCellsOfDifferentTypes()
 }
 
 void
-Lesson3UseFontsAndStyles()
+Lesson3_UseFontsAndStyles()
 {
 	/** Note: when applying same style to many cells - don't create a new
 	style for each cell, instead use the same style for them. For example:
@@ -136,7 +136,7 @@ Lesson3UseFontsAndStyles()
 }
 
 void
-Lesson4Alignment()
+Lesson4_Alignment()
 {
 	ods::Book book;
 	auto *sheet = book.CreateSheet("name");
@@ -160,7 +160,7 @@ Lesson4Alignment()
 }
 
 void
-Lesson5Borders()
+Lesson5_Borders()
 {
 	// Borders are used by creating a border class and then applying it
 	// to a style which then gets applied to the cell
@@ -199,7 +199,7 @@ Lesson5Borders()
 }
 
 void
-Lesson6CellSpan()
+Lesson6_CellSpan()
 {
 	ods::Book book;
 	auto *sheet = book.CreateSheet("name");
@@ -215,7 +215,7 @@ Lesson6CellSpan()
 }
 
 void
-Lesson7UsingImages()
+Lesson7_UsingImages()
 {
 	// Images are set on the sheet relative to a cell
 	
@@ -241,7 +241,7 @@ Lesson7UsingImages()
 }
 
 void
-Lesson8UsingFormulas()
+Lesson8_UsingFormulas()
 {
 	// only very basic formula functionality is supported
 	ods::Book book;
@@ -279,16 +279,17 @@ Lesson8UsingFormulas()
 }
 
 void
-Lesson9CreateSampleInvoice()
+Lesson9_CreateSampleInvoice()
 {
 	new app::Invoice();
 }
 
 void
-Lesson10ReadFile()
+Lesson10_ReadFile()
 {
 	auto path = QDir(QDir::homePath()).filePath("ReadFile.ods");
 	ods::Book book(path);
+	qDebug() << "";
 	
 	// print out the value of cell at given row and column indexes:
 	auto *sheet = book.sheet(0);
@@ -298,10 +299,60 @@ Lesson10ReadFile()
 		return;
 	}
 	
-	PrintOut(sheet, 0, 2); // zero-based, hence: row 1, col 3
-	PrintOut(sheet, 0, 1); // row 1, col 2
-	PrintOut(sheet, 1, 1); // row 2, col 2
-	PrintOut(sheet, 0, 0); // row 1, col 1
+	// print out the values of the first cell of first 5 rows:
+	for(int i = 0; i <= 5; i++)
+		PrintOut(sheet, i, 0);
+}
+
+void
+Lesson11_CreateFormulaWithPercentage()
+{
+	const int col = 2;
+	int row = 0;
+	ods::Book book;
+	auto *sheet = book.CreateSheet("Sheet1");
+	
+	sheet->CreateRow(row++)->CreateCell(0)->SetValue("My weight");
+	sheet->CreateRow(row++)->CreateCell(0)->SetValue("My preferred weight");
+	sheet->CreateRow(row++)->CreateCell(0)->SetValue("Percentage I need to lose");
+	
+	row = 0;
+	auto *cell1 = sheet->row(row++)->CreateCell(col);
+	auto *cell2 = sheet->row(row++)->CreateCell(col);
+	auto *cell3 = sheet->row(row++)->CreateCell(col);
+	
+	cell1->SetValue(100);
+	cell2->SetValue(80);
+	
+	auto *formula = new ods::Formula();
+	formula->Add(ods::Grouping::Open);
+	formula->Add(cell1);
+	formula->Add(ods::Op::Subtract);
+	formula->Add(cell2);
+	formula->Add(ods::Grouping::Close);
+	formula->Add(ods::Op::Divide);
+	formula->Add(cell1);
+	
+	cell3->SetFormula(formula);
+	// Notes:
+	// SetPercentageType(..) just like SetPercentageValue(..) under the hood
+	// apply a style to the cell so after calling this method you
+	// should use the existing style instead of setting a new one.
+	// SetPercentageType(1) sets cell type to "percentage", one decimal place
+	// after the dot, defaults to zero
+	cell3->SetPercentageType(1);
+	auto *style = cell3->style();
+	// also make the cell's text bold with a yellow background
+	style->SetBold();
+	style->SetBackgroundColor(QColor(255, 255, 0));
+	
+	// setting a style on a non-percentage cell:
+	style = book.CreateCellStyle();
+	cell1->SetStyle(style);
+	style->SetBold();
+	style->SetBackgroundColor(QColor(215, 255, 215));
+	
+	Save(book);
 }
 
 void
@@ -330,7 +381,9 @@ PrintOut(ods::Sheet *sheet, const qint32 kRowIndex, const qint32 kColIndex)
 		qDebug() << "formula value: " << *value.AsDouble();
 	} else {
 		const ods::Value &value = cell->value();
-		if (value.IsDouble())
+		if (value.IsEmpty())
+			qDebug() << "Cell value is empty";
+		else if (value.IsDouble())
 			qDebug() << "Cell value as double:" << *value.AsDouble();
 		else if (value.IsPercentage())
 			qDebug() << "Cell value as percentage: " << *value.AsPercentage();
@@ -340,7 +393,7 @@ PrintOut(ods::Sheet *sheet, const qint32 kRowIndex, const qint32 kColIndex)
 			qDebug() << "Unknown cell type";
 		
 	}
-	qDebug() << "\n";
+	qDebug() << "";
 }
 
 int
@@ -351,9 +404,7 @@ main(int argc, char *argv[])
 	qDebug().nospace() << "ods version: " << ods::version_major() << "."
 		<< ods::version_minor();
 	
-	Lesson9CreateSampleInvoice();
-	// Lesson1CreateEmptyBook();
-	// Lesson2CreateCellsOfDifferentTypes();
+	Lesson11_CreateFormulaWithPercentage();
 	return 0;
 }
 

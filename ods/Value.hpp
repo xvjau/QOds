@@ -88,6 +88,9 @@ public:
 	IsDouble() const { return type_ == ods::Type::Double; }
 	
 	bool
+	IsEmpty() const { return data_ == nullptr; }
+	
+	bool
 	IsPercentage() const { return type_ == ods::Type::Percentage; }
 	
 	bool

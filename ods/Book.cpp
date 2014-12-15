@@ -295,7 +295,7 @@ void
 Book::WriteStartDocument(QXmlStreamWriter &xml)
 {
 	xml.setAutoFormatting(true);
-	xml.setAutoFormattingIndent(-1);
+	xml.setAutoFormattingIndent(2);
 	xml.writeStartDocument(QStringLiteral("1.0"), true);
 }
 

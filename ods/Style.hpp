@@ -81,7 +81,7 @@ public:
 	SetBackgroundColor(const QColor&);
 	
 	void
-	SetBold(const bool flag);
+	SetBold(const bool flag = true);
 	
 	void
 	SetBorder(ods::style::Border*);
@@ -103,7 +103,7 @@ public:
 	SetHAlignment(const ods::HAlign a);
 	
 	void
-	SetItalic(const bool flag);
+	SetItalic(const bool flag = true);
 	
 	void
 	SetOptimalRowHeight(const double, const ods::FontSizeType);

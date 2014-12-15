@@ -226,13 +226,16 @@ Cell::SetNumColsRepeated(const qint32 num)
 }
 
 void
-Cell::SetPercentageValue(const double num, const qint8 decimal_places)
+Cell::SetPercentageType(const qint8 decimal_places)
 {
+	const qint8 kDecimalPlaces = (decimal_places < 0) ? 0 : decimal_places;
+	if (value_.IsPercentage())
+	{
+		style_->GetPercentStyle()->SetDecimalPlaces(kDecimalPlaces);
+		return;
+	}
 	auto &ns = tag_->ns();
 	tag_->AttrSet(ns.office(), ods::ns::kValueType, ods::ns::kPercentage);
-	const QString office_value = QString::number(num);
-	tag_->AttrSet(ns.office(), ods::ns::kValue, office_value);
-
 	auto *book = row_->sheet()->book();
 	if (style_ == nullptr)
 	{
@@ -240,7 +243,6 @@ Cell::SetPercentageValue(const double num, const qint8 decimal_places)
 			ods::StylePlace::ContentFile);
 		SetStyle(style_);
 	}
-	const qint8 kDecimalPlaces = (decimal_places < 0) ? 0 : decimal_places;
 	auto *percent_style = style_->GetPercentStyle();
 	if (percent_style == nullptr)
 	{
@@ -250,6 +252,21 @@ Cell::SetPercentageValue(const double num, const qint8 decimal_places)
 		style_->SetPercentStyle(percent_style);
 	}
 	percent_style->SetDecimalPlaces(kDecimalPlaces);
+}
+
+void
+Cell::SetPercentageValue(const double num, const qint8 decimal_places)
+{
+	auto &ns = tag_->ns();
+	if (!value_.IsPercentage())
+	{
+		SetPercentageType(decimal_places);
+	} else {
+		const qint8 kDecimalPlaces = (decimal_places < 0) ? 0 : decimal_places;
+		style_->GetPercentStyle()->SetDecimalPlaces(kDecimalPlaces);
+	}
+	tag_->AttrSet(ns.office(), ods::ns::kValue, QString::number(num));
+	value_.SetPercentage(num);
 }
 
 void

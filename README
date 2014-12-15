@@ -4,7 +4,7 @@ Spreadsheet) files.
 See "how_to_build.html" for how to build for Windows
 with MinGW or Visual Studio 2013.
 
-Results tested on MS Office 2013, LibreOffice and Calligra Sheets.
+Results tested on MS Office 2013 and LibreOffice.
 
 For a simple tutorial check the code in app/main.cpp which also shows
 how to create a sample invoice with formulas and (png) logos.
