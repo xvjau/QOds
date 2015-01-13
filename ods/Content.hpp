@@ -54,7 +54,7 @@ public:
 	
 	ods::Book*
 	book() { return book_; }
-	
+
 	ods::Sheet*
 	CreateSheet(const QString &sheet_name);
 	
@@ -63,6 +63,9 @@ public:
 	
 	void
 	InitDefault();
+	
+	void
+	InitEnd();
 	
 	ods::Ns&
 	ns() const { return *ns_; }

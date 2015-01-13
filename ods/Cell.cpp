@@ -34,6 +34,7 @@
 #include "style/style.hxx"
 #include "style/StyleFamily.hpp"
 #include "Style.hpp"
+#include "tag.hh"
 #include "Tag.hpp"
 #include "util.hh"
 #include "Value.hpp"
@@ -62,7 +63,8 @@ Cell::~Cell() {
 QString
 Cell::Address() const
 {
-	return ods::GenColName(col_start_) + QString::number(row_->row_start() + 1);
+	auto col_start_str = ods::GenColName(col_start_);
+	return col_start_str + QString::number(row_->row_start() + 1);
 }
 
 ods::Cell*
@@ -76,28 +78,25 @@ Cell::Clone()
 	if (formula_ != nullptr)
 		cell->formula_set(formula_->Clone());
 	cell->SetStyle(style_);
-	cell->type_set(type_);
 	value_.CopyTo(cell->value());
 	return cell;
 }
 
-void
-Cell::ConvertTo(const ods::cell::Type t)
+ods::DrawFrame*
+Cell::CreateDrawFrame(const QFile &file)
 {
-	auto &ns = tag_->ns();
-	if (t == ods::cell::Type::Covered)
+	if (draw_frame_ != nullptr)
 	{
-		tag_->attr_set(ns.sheet(), ods::ns::kCoveredSheetCell);
-		tag_->func_set(ods::tag::CoveredSheetCell);
-		type_ = ods::cell::Type::Covered;
-	} else {
-		tag_->attr_set(ns.sheet(), ods::ns::kSheetCell);
-		tag_->func_set(ods::tag::SheetCell);
-		if (t == ods::cell::Type::Placeholder)
-			type_ = ods::cell::Type::Placeholder;
-		else
-			type_ = ods::cell::Type::Normal;
+		mtl_warn("draw_frame_ != nullptr");
+		return nullptr;
 	}
+	draw_frame_ = new ods::DrawFrame(this, file);
+	if (draw_frame_->ok()) {
+		return draw_frame_;
+	}
+	delete draw_frame_;
+	draw_frame_ = nullptr;
+	return nullptr;
 }
 
 ods::Tag*
@@ -116,6 +115,12 @@ Cell::GetTag(ods::Prefix &p, const char *name, ods::tag::func f)
 		tag_->SubtagAdd(tag);
 	}
 	return tag;
+}
+
+bool
+Cell::HasTextP() const
+{
+	return tag_->bits() & ods::tag::bits::HasTextP;
 }
 
 void
@@ -187,21 +192,24 @@ Cell::InitEnd()
 		formula_->UpdateValue();
 }
 
-ods::DrawFrame*
-Cell::CreateDrawFrame(const QFile &file)
+bool
+Cell::is_covered() const
 {
-	if (draw_frame_ != nullptr)
+	return tag_->func() == ods::tag::CoveredSheetCell;
+}
+
+void
+Cell::SetCovered(const bool covered)
+{
+	auto &ns = tag_->ns();
+	if (covered)
 	{
-		mtl_warn("draw_frame_ != nullptr");
-		return nullptr;
+		tag_->attr_set(ns.sheet(), ods::ns::kCoveredSheetCell);
+		tag_->func_set(ods::tag::CoveredSheetCell);
+	} else {
+		tag_->attr_set(ns.sheet(), ods::ns::kSheetCell);
+		tag_->func_set(ods::tag::SheetCell);
 	}
-	draw_frame_ = new ods::DrawFrame(this, file);
-	if (draw_frame_->ok()) {
-		return draw_frame_;
-	}
-	delete draw_frame_;
-	draw_frame_ = nullptr;
-	return nullptr;
 }
 
 void
@@ -218,7 +226,7 @@ Cell::SetFormula(ods::Formula *f)
 }
 
 void
-Cell::SetNumColsRepeated(const qint32 num)
+Cell::SetNumColsRepeated(const quint16 num)
 {
 	tag_->AttrSet(tag_->ns().sheet(), ods::ns::kNumColsRepeated,
 		QString::number(num));

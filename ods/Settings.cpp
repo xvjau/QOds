@@ -42,7 +42,7 @@ Settings::~Settings()
 void
 Settings::Init()
 {
-	QString full_path = QDir(book_->temp_dir().path())
+	QString full_path = QDir(book_->temp_dir_path())
 		.filePath(ods::filename::kSettings);
 	QFile file(full_path);
 	if (!file.open(QFile::ReadOnly | QFile::Text))

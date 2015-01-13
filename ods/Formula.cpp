@@ -85,13 +85,16 @@ bool
 Formula::GetDouble(ods::cell::Ref *cell_ref, double &num)
 {
 	auto *found_cell = ods::FindCell(cell_ref, source_);
-	if (found_cell == nullptr) {
+	if (found_cell == nullptr)
+	{
 		mtl_warn("Cell not found");
 		return false;
 	}
-	if (found_cell->HasFormula()) {
+	if (found_cell->HasFormula())
+	{
 		const auto &value = found_cell->formula()->value();
-		if (value.NoValue()) {
+		if (value.NoValue())
+		{
 			mtl_warn("No value");
 		} else if (value.IsDouble()){
 			num = *value.AsDouble();
@@ -101,7 +104,6 @@ Formula::GetDouble(ods::cell::Ref *cell_ref, double &num)
 		}
 		return false;
 	}
-	
 	bool ok;
 	num = found_cell->value().toString().toDouble(&ok);
 	return ok;
@@ -114,39 +116,53 @@ Formula::UpdateValue()
 	((C5+B5)/A5)*(C4+B4*A3)+B3-C3
 	((10+0.5)/3)*(4.5+2.4*22.3)+8-6
 	**/
+	/**
+	if (source_ == nullptr)
+		mtl_line("\nNew cell = nullptr");
+	else
+		mtl_qline(QString("\nNew cell address:") + source_->Address());
+	**/
 	value_.type_set(ods::Type::Fail);
 	err_.clear();
-	if (!formula_.startsWith(ods::kFormulaPrefix)) {
+	if (!formula_.startsWith(ods::kFormulaPrefix))
+	{
 		err_ = QLatin1String("Doesn't start with ") + ods::kFormulaPrefix;
 		return;
 	}
-	
 	QString number_formula;
 	QStringRef form = formula_.rightRef(formula_.size() -
 		ods::kFormulaPrefix.size());
+	//mtl_qline(QString("Formula: ") + form.toString());
 	double num;
-	for(int i=0; i<form.size(); i++)
+	for(int i = 0; i < form.size(); i++)
 	{
 		if (form.at(i) == '[')
 		{
-			int index = form.indexOf(']', i+1);
+			int index = form.indexOf(']', i + 1);
 			if (index == -1)
 			{
 				err_ = QLatin1String("] not found");
 				return;
 			}
-			QStringRef cell_name = form.mid(i+1, index-i-1);
+			QStringRef cell_name = form.mid(i + 1, index - i - 1);
 			auto *cell_ref = ods::ReadRowCol(cell_name);
 			if (cell_ref == nullptr)
 			{
-				err_ = QLatin1String("ReadRowCol() failed");
+				err_ = QLatin1String("ReadRowCol() failed, cell_name: ") +
+					cell_name.toString();
 				return;
 			}
 			
-			if (!GetDouble(cell_ref, num)) {
-				qDebug() << "failed double(), row: " << cell_ref->row <<
-					", col: " << cell_ref->col << ", from cell_name: " <<
-					cell_name;
+			if (!GetDouble(cell_ref, num))
+			{
+				/**
+				QString out_str = QStringLiteral("failed double(), row: ")
+					+ QString::number(cell_ref->row)
+					+ QStringLiteral(", col: ") + QString::number(cell_ref->col)
+					+ QStringLiteral(", from cell_name: ")
+					+ cell_name.toString();
+				mtl_qline(out_str);
+				**/
 				err_ = QLatin1String("GetDouble() failed");
 				return;
 			}
@@ -157,26 +173,29 @@ Formula::UpdateValue()
 			number_formula.append(form.at(i));
 		}
 	}
-	
+	//QString out_str = QString("Number formula: ") + number_formula;
+	//mtl_qline(out_str);
 	auto *deepest = new ods::Region(number_formula);
 	while (deepest->deep() >= 1)
 	{
 		deepest->Eval(value_);
-		if (value_.error()) {
+		if (value_.error())
+		{
 			err_ = QLatin1String("Region::Eval() error");
 			return;
 		}
-		if (!value_.IsDouble()) {
+		if (!value_.IsDouble())
+		{
 			err_ = QLatin1String("Value not double");
 			return;
 		}
 		
-		if (number_formula.size() == 0) {
+		if (number_formula.size() == 0)
 			break;
-		}
 		QString str_num = QString::number(*value_.AsDouble());
 		QString temp = number_formula.left(deepest->start_index());
-		if (deepest->end_index() < number_formula.size()-1) {
+		if (deepest->end_index() < number_formula.size()-1)
+		{
 			QString right = number_formula.right(number_formula.size()
 				- deepest->end_index() - 1);
 			temp += str_num + right;
@@ -184,12 +203,18 @@ Formula::UpdateValue()
 			temp += str_num;
 		}
 		number_formula = temp;
+		//mtl_qline(number_formula);
 		delete deepest;
 		deepest = new ods::Region(number_formula);
 	}
-	
+	/**
+	out_str = QString("NOW Number formula: ") + number_formula;
+	mtl_qline(out_str);
 	deepest = new ods::Region(number_formula);
+	**/
 	deepest->Eval(value_);
+	//out_str = QString("VALUE VAL NOW IS: ") + value_.toString() + "\n";
+	//mtl_qline(out_str);
 	delete deepest;
 }
 

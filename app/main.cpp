@@ -28,8 +28,8 @@
 void
 Save(ods::Book&);
 
-void
-PrintOut(ods::Sheet *sheet, const qint32 kRowIndex, const qint32 kColIndex);
+QString
+GetCellValue(ods::Cell *cell);
 // <== Utility functions
 
 void
@@ -40,11 +40,10 @@ Lesson1_CreateEmptyBook()
 	auto *row = sheet->CreateRow(0); // create first/top row
 
 	// Column (cell) count is zero-based, e.g. 0 = 1, 4 = 5.
+	// Cells and rows must always be created in ascending order.
 	
-	// Cell with a string value of "cell at 0"
-	// Create a cell at column 0 (first column)
-	auto *cell = row->CreateCell(0);
-	cell->SetValue("cell at 0");
+	row->CreateCell(1)->SetValue("At 1");
+	row->CreateCell(4)->SetValue("At 4");
 
 	Save(book);
 }
@@ -288,10 +287,14 @@ void
 Lesson10_ReadFile()
 {
 	auto path = QDir(QDir::homePath()).filePath("ReadFile.ods");
+	QFile file(path);
+	if (!file.exists())
+	{
+		qDebug() << "No such file:" << path;
+		return;
+	}
 	ods::Book book(path);
-	qDebug() << "";
 	
-	// print out the value of cell at given row and column indexes:
 	auto *sheet = book.sheet(0);
 	if (sheet == nullptr)
 	{
@@ -299,9 +302,30 @@ Lesson10_ReadFile()
 		return;
 	}
 	
-	// print out the values of the first cell of first 5 rows:
-	for(int i = 0; i <= 5; i++)
-		PrintOut(sheet, i, 0);
+	//print out the values of the first 9 cells of the 3th row:
+	const int kRow = 2;
+	for (int i=0; i <= 8; i++)
+	{
+		const int kColumn = i;
+		ods::Cell *cell = nullptr;
+		auto *row = sheet->row(kRow);
+		if (row == nullptr)
+		{
+			qDebug() << "No row at " << QString::number(kRow);
+			return;
+		}
+		cell = row->cell(kColumn);
+		QString value_as_string;
+		if (cell == nullptr)
+			value_as_string = "No cell at " + QString::number(kColumn);
+		else
+			value_as_string = GetCellValue(cell);
+		
+		QString which_cell = "Cell [" + QString::number(kRow)
+			+ ":" + QString::number(kColumn) + "]: ";
+		
+		qDebug() << which_cell << value_as_string;
+	}
 }
 
 void
@@ -314,13 +338,14 @@ Lesson11_CreateFormulaWithPercentage()
 	
 	sheet->CreateRow(row++)->CreateCell(0)->SetValue("My weight");
 	sheet->CreateRow(row++)->CreateCell(0)->SetValue("My preferred weight");
-	sheet->CreateRow(row++)->CreateCell(0)->SetValue("Percentage I need to lose");
+	auto *cell = sheet->CreateRow(row++)->CreateCell(0);
+	cell->SetValue("Percentage I need to lose");
+	cell->SetRowColSpan(1, 2);
 	
 	row = 0;
 	auto *cell1 = sheet->row(row++)->CreateCell(col);
 	auto *cell2 = sheet->row(row++)->CreateCell(col);
 	auto *cell3 = sheet->row(row++)->CreateCell(col);
-	
 	cell1->SetValue(100);
 	cell2->SetValue(80);
 	
@@ -355,45 +380,39 @@ Lesson11_CreateFormulaWithPercentage()
 	Save(book);
 }
 
-void
-PrintOut(ods::Sheet *sheet, const qint32 kRowIndex, const qint32 kColIndex)
+QString
+GetCellValue(ods::Cell *cell)
 {
-	qDebug().nospace() << "Querying cell at row/col: "
-		<< kRowIndex << "/" << kColIndex;
-	
-	auto *row = sheet->row(kRowIndex);
-	if (row == nullptr)
-	{
-		qDebug() << "No row at" << kRowIndex << "\n";
-		return;
-	}
-	auto *cell = row->cell(kColIndex);
-	if (cell == nullptr)
-	{
-		qDebug() << "No cell at" << kColIndex << "\n";
-		return;
-	}
-	
 	if (cell->HasFormula())
 	{
 		auto *formula = cell->formula();
+		if (formula->error())
+			return QString("formula error: ") + formula->err();
 		auto &value = formula->value();
-		qDebug() << "formula value: " << *value.AsDouble();
-	} else {
-		const ods::Value &value = cell->value();
-		if (value.IsEmpty())
-			qDebug() << "Cell value is empty";
-		else if (value.IsDouble())
-			qDebug() << "Cell value as double:" << *value.AsDouble();
-		else if (value.IsPercentage())
-			qDebug() << "Cell value as percentage: " << *value.AsPercentage();
-		else if (value.IsString())
-			qDebug() << "Cell value as string:" << *value.AsString();
-		else
-			qDebug() << "Unknown cell type";
-		
+		if (value.NoValue()) // should never happen
+			return "formula has no value";
+		if (value.IsDouble() || value.IsPercentage())
+		{
+			return QString("formula value: ")
+				+ QString::number(*value.AsDouble());
+		}
+		// don't care, just print out as a string
+		return QString("formula has a non-number value: ") + value.toString();
 	}
-	qDebug() << "";
+
+	const ods::Value &value = cell->value();
+	if (value.NoValue())
+		return "cell value is empty";
+	else if (value.IsDouble())
+		return QString("cell value as double: ")
+			 + QString::number(*value.AsDouble());
+	else if (value.IsPercentage())
+		return QString("cell value as percentage: ")
+			+ QString::number(*value.AsPercentage());
+	else if (value.IsString())
+		return QString("cell value as string: ") + *value.AsString();
+	
+	return "unknown cell type";
 }
 
 int
@@ -402,9 +421,13 @@ main(int argc, char *argv[])
 	QCoreApplication app(argc, argv);
 	
 	qDebug().nospace() << "ods version: " << ods::version_major() << "."
-		<< ods::version_minor();
+		<< ods::version_minor() << "." << ods::version_micro();
 	
+	//Lesson1_CreateEmptyBook();
+	//Lesson9_CreateSampleInvoice();
+	//Lesson10_ReadFile();
 	Lesson11_CreateFormulaWithPercentage();
+	
 	return 0;
 }
 

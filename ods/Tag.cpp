@@ -57,8 +57,8 @@ ods::Tag*
 Tag::Clone()
 {
 	auto *tag = this->New();
-	
-	
+	tag->attrs_set(attrs_->Clone());
+	tag->attr_set(attr_->Clone());
 	return tag;
 }
 
@@ -166,6 +166,7 @@ Tag::SetTextP(const QString &value)
 		textp->DeleteSubnodes();
 	}
 	textp->subnodes().append(new ods::Node(value));
+	bits_ |= ods::tag::bits::HasTextP;
 }
 
 void
@@ -179,7 +180,7 @@ Tag::Write(QXmlStreamWriter &xml, QString &err)
 {
 	xml.writeStartElement(attr_->QualifiedName());
 	
-	if (bits_ & kXmlNs)
+	if (bits_ & ods::tag::bits::XmlNs)
 		ns_.WriteNamespaces(xml);
 	if (attrs_ != nullptr)
 		attrs_->Write(xml);

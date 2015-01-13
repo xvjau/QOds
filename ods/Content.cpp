@@ -115,6 +115,13 @@ Content::InitDefault()
 }
 
 void
+Content::InitEnd()
+{
+	foreach (auto *sheet, sheets_)
+		sheet->InitEnd();
+}
+
+void
 Content::PreSave()
 {
 	foreach (auto *sheet, sheets_)
@@ -124,7 +131,7 @@ Content::PreSave()
 void
 Content::Read()
 {
-	QString full_path = QDir(book_->temp_dir().path())
+	QString full_path = QDir(book_->temp_dir_path())
 		.filePath(ods::filename::kContent);
 	file_.setFileName(full_path);
 	if (!file_.open(QFile::ReadOnly | QFile::Text))
@@ -145,8 +152,8 @@ Content::Read()
 			doc_content_->Read();
 		}
 	}
-	
 	Scan(doc_content_);
+	InitEnd();
 }
 
 void

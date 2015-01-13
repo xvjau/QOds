@@ -47,7 +47,7 @@ void
 Value::CopyTo(ods::Value &v)
 {
 	v.type_set(type_);
-	if (IsEmpty())
+	if (NoValue())
 		return;
 	if (IsDouble())
 		v.SetDouble(*AsDouble());
@@ -62,7 +62,7 @@ Value::CopyTo(ods::Value &v)
 void
 Value::DeleteData()
 {
-	if (IsEmpty())
+	if (!Ok())
 		return;
 	if (IsDouble() || IsPercentage())
 		delete AsDouble();
@@ -84,7 +84,8 @@ Value::Read(ods::Ns &ns, ods::Attrs &attrs)
 {
 	DeleteData();
 	auto *type_attr = attrs.Get(ns.office(), ods::ns::kValueType);
-	if (type_attr == nullptr) { // shouldn't happen
+	if (type_attr == nullptr)
+	{ // shouldn't happen
 		type_ = ods::Type::Fail;
 		return;
 	}
@@ -95,7 +96,8 @@ Value::Read(ods::Ns &ns, ods::Attrs &attrs)
 		return;
 	}
 	
-	if (IsDouble() || IsPercentage()) {
+	if (IsDouble() || IsPercentage())
+	{
 		double num;
 		if (value_attr->ToDouble(num))
 		{
@@ -153,7 +155,7 @@ Value::SetString(const QString &s)
 QString
 Value::toString() const
 {
-	if (error() || IsEmpty())
+	if (!Ok())
 		return "";
 	
 	if (IsDouble() || IsPercentage())

@@ -45,6 +45,9 @@ public:
 	void
 	Add(ods::Cell *cell) { cells_.push_back(cell); }
 	
+	void
+	AddColCount(ods::Cell *cell);
+	
 	ods::Cell*
 	cell(const qint32 column);
 	
@@ -58,8 +61,7 @@ public:
 	column_count_set(const qint32 n) { column_count_ = n; }
 	
 	ods::Cell* //@@@HasDoc
-	CreateCell(const qint32 at_column,
-		const ods::cell::Type = ods::cell::Type::Normal);
+	CreateCell(const qint32 at_column);
 	
 	ods::Cell*
 	GetPrevCell(const qint32 at_column);
@@ -68,10 +70,7 @@ public:
 	InitEnd();
 	
 	bool
-	is_placeholder() const { return is_placeholder_; }
-	
-	void
-	is_placeholder_set(const bool yes) { is_placeholder_ = yes; }
+	IsEmpty() const { return cells_.size() == 0; }
 	
 	qint32
 	num_rows_repeated() const { return num_rows_repeated_; }
@@ -113,21 +112,21 @@ public:
 private:
 	NO_ASSIGN_COPY_MOVE(Row);
 	
+	ods::Cell*
+	GenCell(const qint32 at_column, const bool covered);
+	
 	void
 	Init();
 	
 	ods::Cell*
-	InsertCell(const qint32 column, const ods::cell::Type);
+	InsertCell(const qint32 column, const bool covered = false);
 	
 	ods::Cell*
-	InsertCoveredCell(const qint32 at_column, const qint32 col_repeat);
-	
-	ods::Cell*
-	InsertPlaceholder(const qint32 column, const qint32 col_repeat);
+	InsertEmptyCell(const qint32 at_column, const quint16 num_cols_repeated,
+		const bool covered);
 	
 	QVector<ods::Cell*>	cells_;
 	qint32			column_count_ = 0;
-	bool			is_placeholder_ = false;
 	qint32			num_rows_repeated_ = 1;
 	ods::Style		*opt_row_height_style_ = nullptr;
 	qint32			row_start_ = -1; // zero based

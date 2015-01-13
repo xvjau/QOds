@@ -22,7 +22,11 @@ endif (WIN32)
 
 find_package(Qt5Core)
 find_package(Qt5Gui)
-set(src_files main.cpp Invoice.cpp Invoice.hpp Item.cpp Item.hpp)
+
+file(GLOB_RECURSE src_files
+	"*.h" "*.hh" "*.hpp" "*.hxx"
+	"*.c" "*.cc" "*.cpp"
+	"ods")
 
 foreach(f IN LISTS src_files)
 	get_filename_component(b ${f} NAME)

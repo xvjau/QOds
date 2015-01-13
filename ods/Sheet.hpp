@@ -72,11 +72,14 @@ public:
 	ods::Row*
 	GetPrevRow(const qint32 at_row);
 	
+	void
+	InitEnd();
+	
 	ods::Row*
 	InsertPlaceholder(const qint32 at_row, const qint32 row_repeat);
 	
 	ods::Row*
-	InsertRow(const qint32 at_row, const bool is_placeholder);
+	InsertRow(const qint32 at_row);
 	
 	const QString&
 	name() const { return name_; }

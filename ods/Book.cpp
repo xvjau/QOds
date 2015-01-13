@@ -47,11 +47,13 @@ namespace ods	{
 Book::Book()
 {
 	temp_dir_.setAutoRemove(kDoRemove);
+	InitTempDir();
 }
 
 Book::Book(const QString &file_path)
 {
 	temp_dir_.setAutoRemove(kDoRemove);
+	InitTempDir();
 	Read(file_path);
 }
 
@@ -149,7 +151,7 @@ Book::GetMediaDirPath()
 {
 	if (!media_dir_path_.isEmpty())
 		return &media_dir_path_;
-	QDir dir(QDir(temp_dir_.path()).filePath(ods::filename::kMediaDirName));
+	QDir dir(QDir(temp_dir_path_).filePath(ods::filename::kMediaDirName));
 	if (!dir.exists())
 	{
 		if (!dir.mkpath("."))
@@ -209,6 +211,20 @@ Book::InitDefault()
 }
 
 void
+Book::InitTempDir()
+{
+	if (!dev_mode_)
+	{
+		temp_dir_path_ = temp_dir_.path();
+		return;
+	}
+	temp_dir_path_ = QDir(QDir::homePath()).filePath("file");
+	QDir dir(temp_dir_path_);
+	if (!dir.mkpath("."))
+		mtl_warn("Can't create temp dir");
+}
+
+void
 Book::PrepareDir(const QString &save_dir, QString &err)
 {
 	QDir dir(save_dir);
@@ -225,13 +241,11 @@ Book::PrepareDir(const QString &save_dir, QString &err)
 void
 Book::Read(const QString &file_path)
 {
-	office_path_ = file_path;
-	if (!temp_dir_.isValid()) {
+	if (!dev_mode_ && !temp_dir_.isValid()) {
 		mtl_warn("temp dir invalid");
 		return;
 	}
-	extracted_file_paths_ = JlCompress::extractDir(office_path_,
-		temp_dir_.path());
+	extracted_file_paths_ = JlCompress::extractDir(file_path, temp_dir_path_);
 	manifest_ = new ods::Manifest(this);
 	content_ = new ods::Content(this);
 	meta_ = new ods::Meta(this);
@@ -243,7 +257,7 @@ Book::Read(const QString &file_path)
 QString
 Book::Save(const QFile &target)
 {
-	QString save_dir = temp_dir_.path();
+	QString save_dir = temp_dir_path_;
 	SaveMimeTypeFile(save_dir);
 	QString err;
 
@@ -295,7 +309,7 @@ void
 Book::WriteStartDocument(QXmlStreamWriter &xml)
 {
 	xml.setAutoFormatting(true);
-	xml.setAutoFormattingIndent(2);
+	xml.setAutoFormattingIndent(-1);
 	xml.writeStartDocument(QStringLiteral("1.0"), true);
 }
 

@@ -115,9 +115,6 @@ public:
 	ods::Meta*
 	meta() { return meta_; }
 	
-	void
-	Read(const QString &file_path);
-	
 	QString
 	Save(const QFile &targetOdsFile);
 	
@@ -136,8 +133,8 @@ public:
 	ods::style::Manager*
 	style_manager() { return style_manager_; }
 	
-	const QTemporaryDir&
-	temp_dir() const { return temp_dir_; }
+	const QString&
+	temp_dir_path() const { return temp_dir_path_; }
 	
 	void
 	WriteStartDocument(QXmlStreamWriter&);
@@ -146,24 +143,31 @@ private:
 	NO_ASSIGN_COPY_MOVE(Book);
 	
 	void
+	InitTempDir();
+	
+	void
 	PrepareDir(const QString &save_dir, QString &err);
+	
+	void
+	Read(const QString &file_path);
 	
 	void
 	SaveMimeTypeFile(const QString &dir_path);
 	
 	ods::Content			*content_ = nullptr;
+	const bool				dev_mode_ = false;
 	QVector<ods::DrawFrame*>	draw_frames_;
 	QString					err_;
 	QStringList				extracted_file_paths_;
 	ods::Manifest			*manifest_ = nullptr;
 	QString					media_dir_path_;
 	ods::Meta				*meta_ = nullptr;
-	QString					office_path_;
 	ods::Settings			*settings_ = nullptr;
 	ods::style::Manager		*style_manager_ = nullptr;
 	QVector<ods::Style*>	styles_;
 	QVector<ods::PercentStyle*> percent_styles_;
 	QTemporaryDir			temp_dir_;
+	QString					temp_dir_path_;
 };
 
 } // namespace ods

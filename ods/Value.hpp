@@ -88,9 +88,6 @@ public:
 	IsDouble() const { return type_ == ods::Type::Double; }
 	
 	bool
-	IsEmpty() const { return data_ == nullptr; }
-	
-	bool
 	IsPercentage() const { return type_ == ods::Type::Percentage; }
 	
 	bool
@@ -149,7 +146,7 @@ private:
 	NO_ASSIGN_COPY_MOVE(Value);
 	
 	void		*data_ = nullptr;
-	ods::Type	type_	= ods::Type::NotSet;
+	ods::Type	type_ = ods::Type::NotSet;
 };
 
 } // namespace ods

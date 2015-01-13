@@ -52,16 +52,15 @@ Attrs::Clone()
 	auto *inst = new ods::Attrs();
 	auto &vec = inst->attrs();
 	foreach (auto *attr, attrs_)
-	{
 		vec.append(attr->Clone());
-	}
 	return inst;
 }
 
 ods::Attr*
 Attrs::Get(ods::Prefix &prefix, const char *name)
 {
-	foreach (auto *attr, attrs_) {
+	foreach (auto *attr, attrs_)
+	{
 		ods::Prefix &curr_prefix = attr->prefix();
 		if (prefix.uri().id != curr_prefix.uri().id)
 			continue;

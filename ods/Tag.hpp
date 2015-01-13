@@ -40,15 +40,13 @@ class Ns;
 
 class ODS_API Tag
 {
-	static const quint8 kUsed	= 1;
-	static const quint8 kXmlNs	= 2;
-	
 public:
 	Tag(ods::Ns&, ods::tag::func);
 	virtual ~Tag();
 	
 	void
-	Add(ods::Prefix &prefix, const char *name) {
+	Add(ods::Prefix &prefix, const char *name)
+	{
 		if (attrs_ == nullptr)
 			attrs_ = new ods::Attrs();
 		attrs_->Add(prefix, name);
@@ -58,12 +56,23 @@ public:
 	attr() { return attr_; }
 	
 	void
+	attr_set(ods::Attr *attr)
+	{
+		if (attr_ != nullptr)
+			delete attr_;
+		attr_ = attr;
+	}
+	
+	void
 	attr_set(ods::Prefix &prefix, const char *name) {
 		attr_ = new ods::Attr(prefix, name);
 	}
 	
 	ods::Attrs*
 	attrs() { return attrs_; }
+	
+	void
+	attrs_set(ods::Attrs *attrs) { attrs_ = attrs; }
 	
 	void
 	AttrSet(ods::Prefix &prefix, const char *key, const QString &value);
@@ -96,6 +105,11 @@ public:
 	GetSubtag(ods::tag::func f);
 	
 	bool
+	IsAnyCell() const { return
+		ods::tag::SheetCell == func_ ||
+		ods::tag::CoveredSheetCell == func_; }
+	
+	bool
 	IsCell() const { return ods::tag::SheetCell == func_; }
 	
 	bool
@@ -122,9 +136,9 @@ public:
 	void
 	SetPrintXmlns(const bool a) {
 		if (a)
-			bits_ |= kXmlNs;
+			bits_ |= ods::tag::bits::XmlNs;
 		else
-			bits_ &= ~kXmlNs;
+			bits_ &= ~ods::tag::bits::XmlNs;
 	}
 	
 	void
@@ -143,14 +157,14 @@ public:
 	SubtagAdd(ods::Tag *tag) { SubnodeAdd(new ods::Node(tag)); }
 	
 	bool
-	used() const { return (bits_ & kUsed) != 0; }
+	used() const { return (bits_ & ods::tag::bits::Used) != 0; }
 	
 	void
 	used_set(const bool a) {
 		if (a)
-			bits_ |= kUsed;
+			bits_ |= ods::tag::bits::Used;
 		else
-			bits_ &= ~kUsed;
+			bits_ &= ~ods::tag::bits::Used;
 	}
 	
 	void

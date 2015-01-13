@@ -73,8 +73,10 @@ FindCell(ods::cell::Ref *ref, ods::Cell *source)
 	}
 	
 	auto *cell = row->cell(ref->col);
-	if (cell == nullptr) {
+	if (cell == nullptr)
+	{
 		mtl_qline(QStringLiteral("No such cell: ") + QString::number(ref->col)
+			+ QStringLiteral(" at row: ") + QString::number(ref->row)
 			+ QStringLiteral(", column count: ")
 			+ QString::number(row->column_count()));
 		return nullptr;
@@ -145,18 +147,27 @@ ReadRowCol(const QStringRef &s)
 {
 	//=> FIXME
 	/** skip '.', create proper solution later **/
-	QStringRef str = s.right(1);
-	auto *cell_ref = new ods::cell::Ref();
+	QStringRef cell_name = s.right(s.size() -1);
 	
-	for(int i=0; i<str.size(); i++)
+	/**
+	QString out_str = s.toString() + QString(" becomes ")
+		+ cell_name.toString();
+	mtl_qline(out_str);
+	**/
+	auto *cell_ref = new ods::cell::Ref();
+	const int count = cell_name.size();
+	
+	for(int i = 0; i < count; i++)
 	{
-		QChar c = str.at(i);
+		QChar c = cell_name.at(i);
 		if (!c.isDigit())
 			continue;
 		
-		QStringRef letters = str.left(i);
+		QStringRef letters = cell_name.left(i);
 		cell_ref->col = ods::GenColIndex(letters);
-		QStringRef digits = str.right(i);
+		QStringRef digits = cell_name.right(count - i);
+		//qDebug() << "letters:" << letters << ", digits:" << digits <<
+		//	", i:" << i;
 		bool ok;
 		cell_ref->row = digits.toInt(&ok);
 		if (ok) {
@@ -168,6 +179,11 @@ ReadRowCol(const QStringRef &s)
 		}
 	}
 	
+	/**
+	out_str = QString("End result, row/col: ") + QString::number(cell_ref->row)
+		+ QString("/") + QString::number(cell_ref->col);
+	mtl_qline(out_str);
+	**/
 	return cell_ref;
 }
 
@@ -223,7 +239,7 @@ quint32
 version_major() { return 1; }
 
 quint32
-version_micro() { return 0; }
+version_micro() { return 1; }
 
 quint32
 version_minor() { return 1; }

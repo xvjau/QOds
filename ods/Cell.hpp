@@ -31,6 +31,7 @@
 #include <QXmlStreamReader>
 
 #include "cell.hxx"
+#include "tag.hh"
 #include "tag.hxx"
 #include "Value.hpp"
 
@@ -54,7 +55,22 @@ public:
 	Address() const;
 	
 	ods::Cell*
+	cell_next() const { return cell_next_; }
+	
+	void
+	cell_next_set(ods::Cell *cell) { cell_next_ = cell; }
+	
+	ods::Cell*
+	cell_prev() const { return cell_prev_; }
+	
+	void
+	cell_prev_set(ods::Cell *cell) { cell_prev_ = cell; }
+	
+	ods::Cell*
 	Clone();
+	
+	quint16
+	col_count() const { return num_cols_spanned_ * num_cols_repeated_; }
 	
 	qint32
 	col_start() const { return col_start_; }
@@ -62,8 +78,8 @@ public:
 	void
 	col_start_set(const int n) { col_start_ = n; }
 	
-	void
-	ConvertTo(const ods::cell::Type);
+	ods::DrawFrame*
+	CreateDrawFrame(const QFile &file);
 	
 	QString
 	Diagnose() { return value_.Diagnose(); }
@@ -80,14 +96,20 @@ public:
 	bool
 	HasFormula() const { return formula_ != nullptr; }
 	
+	bool
+	HasTextP() const;
+	
 	void
 	InitEnd();
 	
 	bool
-	is_placeholder() const { return type_ == ods::cell::Type::Placeholder; }
+	is_covered() const;
 	
-	ods::DrawFrame*
-	CreateDrawFrame(const QFile &file);
+	bool
+	IsEmpty() const { return value_.NoValue() && !HasTextP(); }
+	
+	bool
+	IsEmpty2() const { return IsEmpty() && style_ == nullptr; }
 	
 	quint16
 	num_cols_repeated() const { return num_cols_repeated_; }
@@ -114,13 +136,13 @@ public:
 	Set(ods::Prefix &prefix, const char *key, const QString &value);
 	
 	void
-	SetCovered();
+	SetCovered(const bool covered = true);
 	
 	void
 	SetFormula(ods::Formula*);
 	
 	void
-	SetNumColsRepeated(const qint32 num);
+	SetNumColsRepeated(const quint16 num);
 	
 	void
 	SetPercentageType(const qint8 decimal_places = 0);
@@ -146,21 +168,8 @@ public:
 	ods::Tag*
 	tag() { return tag_; }
 	
-	ods::cell::Type
-	type() const { return type_; }
-	
-	void
-	type_set(const ods::cell::Type t) { type_ = t; }
-	
-	void
-	UpdateAll() { UpdateValue(); }
-	
-	void
-	UpdateValue() { mtl_line("Should not be called"); }
-	
 	qint32
-	UpToColumn() const { return col_start_ +
-		(num_cols_spanned_ * num_cols_repeated_) - 1; }
+	UpToColumn() const { return col_start_ + col_count() - 1; }
 	
 	ods::Value&
 	value() { return value_; }
@@ -177,18 +186,20 @@ private:
 	void
 	UpdateDrawFrame();
 	
-	qint32			col_start_ = 0;
+	qint32			col_start_ = -100;
 	quint16			num_cols_repeated_ = 1;
 	quint16			num_cols_spanned_ = 1;
 	//quint16		num_matrix_rows_spanned_;
 	quint16			num_rows_spanned_ = 1;
+	
+	ods::Cell		*cell_next_ = nullptr;
+	ods::Cell		*cell_prev_ = nullptr;
 	
 	ods::DrawFrame	*draw_frame_ = nullptr;
 	ods::Formula	*formula_ = nullptr;
 	ods::Row		*row_ = nullptr;
 	ods::Style		*style_ = nullptr;
 	ods::Tag		*tag_ = nullptr;
-	ods::cell::Type	type_ = ods::cell::Type::Normal;
 	ods::Value		value_;
 };
 

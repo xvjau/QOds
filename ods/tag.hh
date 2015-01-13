@@ -30,6 +30,14 @@ class Ns;
 class Tag;
 namespace tag	{ // ods::tag::
 
+namespace bits	{ // ods::tag::bits::
+
+const quint8
+	HasTextP	= 1,
+	Used		= 2,
+	XmlNs		= 4;
+} // ods::tag::bits::
+
 ODS_API ods::Tag*	BackgroundImage(ods::Ns&, ods::Tag*);
 ODS_API ods::Tag*	CalculationSettings(ods::Ns&, ods::Tag*);
 ODS_API ods::Tag*	ConfigItem(ods::Ns&, ods::Tag*);

@@ -99,7 +99,7 @@ Manifest::InitDefault()
 void
 Manifest::Read()
 {
-	QString meta_path = QDir(book_->temp_dir().path()).filePath(kMetaInf);
+	QString meta_path = QDir(book_->temp_dir_path()).filePath(kMetaInf);
 	QFile file(QDir(meta_path).filePath(ods::filename::kManifest));
 	if (!file.open(QFile::ReadOnly | QFile::Text))
 	{

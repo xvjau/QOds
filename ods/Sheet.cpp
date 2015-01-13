@@ -73,31 +73,31 @@ Sheet::CreateRow(const qint32 at_row)
 		return nullptr;
 	}
 	if (at_row == 0)
-		return InsertRow(0, false);
+		return InsertRow(0);
 	
 	// stage: Null
 	auto *prev_row = GetPrevRow(at_row);
 	if (prev_row == nullptr) {
 		//insert placeholder with proper repeat_row
 		InsertPlaceholder(0, at_row);
-		return InsertRow(at_row, false);
+		return InsertRow(at_row);
 	}
 	
 	// stage: Next to it
 	const qint32 kPrevRowUpToCol = prev_row->UpToRow();
 	if (kPrevRowUpToCol + 1 == at_row) // is next to it
-		return InsertRow(at_row, false);
+		return InsertRow(at_row);
 	
 	// stage: A gap between them
-	if (prev_row->is_placeholder()) {
+	if (prev_row->IsEmpty()) {
 		prev_row->SetNumRowsRepeated(at_row - prev_row->row_start());
-		return InsertRow(at_row, false);
+		return InsertRow(at_row);
 	}
 	
 	qint32 placeholder_num_rows = at_row - 1 - kPrevRowUpToCol;
 	qint32 row_start = kPrevRowUpToCol + 1;
 	InsertPlaceholder(row_start, placeholder_num_rows);
-	return InsertRow(at_row, false);
+	return InsertRow(at_row);
 }
 
 ods::Row*
@@ -123,7 +123,6 @@ Sheet::Init()
 		if (attr != nullptr)
 			name_ = attr->value();
 	}
-	
 	qint32 row_start = 0;
 	auto &subnodes = tag_->subnodes();
 	foreach (auto *node, subnodes)
@@ -131,7 +130,8 @@ Sheet::Init()
 		if (!node->IsTag())
 			continue;
 		auto *tag = node->Tag();
-		if (tag->IsRow()) {
+		if (tag->IsRow())
+		{
 			auto *row = new ods::Row(this, tag, row_start);
 			rows_.push_back(row);
 			row_start += row->num_rows_repeated();
@@ -142,15 +142,15 @@ Sheet::Init()
 			}
 		}
 	}
-	foreach (auto *row, rows_)
-		row->InitEnd();
-	if (column_ == nullptr)
-		InitDefault();
+	//if (column_ == nullptr)
+	//	InitDefault();
 }
 
 void
 Sheet::InitColumn()
 {
+	if (column_ != nullptr)
+		return;
 	ods::Ns &ns = tag_->ns();
 	auto *col_tag = ods::tag::SheetColumn(ns, nullptr);
 	column_ = new ods::Column(this, col_tag);
@@ -183,20 +183,27 @@ Sheet::InitDefault()
 	**/
 }
 
+void
+Sheet::InitEnd()
+{
+	foreach (auto *row, rows_)
+		row->InitEnd();
+	//InitColumn();
+}
+
 ods::Row*
 Sheet::InsertPlaceholder(const qint32 at_row, const qint32 row_repeat)
 {
-	auto *row = InsertRow(at_row, true);
+	auto *row = InsertRow(at_row);
 	row->SetNumRowsRepeated(row_repeat);
 	return row;
 }
 
 ods::Row*
-Sheet::InsertRow(const qint32 at_row, const bool is_placeholder)
+Sheet::InsertRow(const qint32 at_row)
 {
 	auto *tag = ods::tag::SheetRow(tag_->ns(), nullptr);
 	auto *row = new ods::Row(this, tag, at_row);
-	row->is_placeholder_set(is_placeholder);
 	int vec_index = 0;
 	foreach (auto *row, rows_)
 	{
@@ -217,10 +224,7 @@ Sheet::PreSave()
 		//mtl_warn("Fix");
 		return;
 	}
-	const auto kTotalCols = column_->column_count();
-	foreach (auto *row, rows_)
-		row->PreSave(kTotalCols);
-	
+	InitEnd();
 	auto &subnodes = tag_->subnodes();
 	subnodes.prepend(new ods::Node(column_->tag()));
 }
