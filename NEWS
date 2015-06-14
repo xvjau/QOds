@@ -1,0 +1,4 @@
+June 2015:
+- Broke backward compatibility, use now ods::style::Percent
+instead of ods::PercentStyle.
+

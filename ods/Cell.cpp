@@ -28,7 +28,8 @@
 #include "Node.hpp"
 #include "Ns.hpp"
 #include "ods.hh"
-#include "PercentStyle.hpp"
+#include "style/Currency.hpp"
+#include "style/Percent.hpp"
 #include "Row.hpp"
 #include "Sheet.hpp"
 #include "style/style.hxx"
@@ -40,11 +41,6 @@
 #include "Value.hpp"
 
 namespace ods	{
-
-Cell::Cell()
-{
-	mtl_qline("FIX THE CODE");
-}
 
 Cell::Cell(ods::Row *row, ods::Tag *tag, const qint32 col_start) :
 	col_start_(col_start),
@@ -210,6 +206,57 @@ Cell::SetCovered(const bool covered)
 		tag_->attr_set(ns.sheet(), ods::ns::kSheetCell);
 		tag_->func_set(ods::tag::SheetCell);
 	}
+}
+
+void
+Cell::SetCurrencyType(const ods::i18n::CurrencyType *kCurrencyType)
+{
+	if (value_.IsCurrency())
+	{
+		auto *curr_style = style_->GetCurrencyStyle();
+		curr_style->SetType(kCurrencyType);
+		return;
+	}
+	auto &ns = tag_->ns();
+	tag_->AttrSet(ns.office(), ods::ns::kValueType, ods::ns::kCurrency);
+
+	QString str = (kCurrencyType == nullptr) ? "EUR" : kCurrencyType->currency.iso;
+	// office:currency="EUR"
+	tag_->AttrSet(ns.office(), ods::ns::kCurrency, str);
+	auto *book = row_->sheet()->book();
+	if (style_ == nullptr)
+	{
+		style_ = book->CreateStyle(ods::StyleFamilyId::Cell,
+			ods::StylePlace::ContentFile);
+		SetStyle(style_);
+	}
+	auto *currency_style = style_->GetCurrencyStyle();
+	if (currency_style == nullptr)
+	{
+		currency_style = book->GetCurrencyStyle(kCurrencyType);
+		if (currency_style == nullptr)
+		{
+			currency_style = book->CreateCurrencyStyle(ods::StylePlace::StylesFile);
+		}
+		style_->SetCurrencyStyle(currency_style);
+	}
+	currency_style->SetType(kCurrencyType);
+}
+
+void
+Cell::SetCurrencyValue(const double num, const ods::i18n::CurrencyType *curr_type)
+{
+	auto &ns = tag_->ns();
+
+	if (!value_.IsCurrency())
+		SetCurrencyType(curr_type);
+
+	// now set the string value + the currency symbol to show up
+	const QString value = QString::number(num);
+	tag_->AttrSet(ns.office(), ods::ns::kValue, value);
+	tag_->SetTextP(value + QStringLiteral(" €"));
+	if (tag_->attrs() != nullptr)
+		value_.Read(ns, *tag_->attrs());
 }
 
 void

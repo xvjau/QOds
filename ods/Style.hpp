@@ -27,15 +27,11 @@
 #include "err.hpp"
 #include "global.hxx"
 #include "ods.hxx"
+#include "style/decl.hxx"
 #include "tag.hxx"
 #include <QColor>
 
 namespace ods	{ // ods::
-
-namespace style	{ // ods::style::
-class Border;
-class StyleFamily;
-} // ods::style::
 
 class ODS_API Style
 {
@@ -64,8 +60,11 @@ public:
 	
 	void
 	font_size_type_set(const ods::FontSizeType t) { font_size_type_ = t; }
+
+	ods::style::Currency*
+	GetCurrencyStyle();
 	
-	ods::PercentStyle*
+	ods::style::Percent*
 	GetPercentStyle();
 	
 	ods::Tag*
@@ -85,6 +84,9 @@ public:
 	
 	void
 	SetBorder(ods::style::Border*);
+
+	void
+	SetCurrencyStyle(ods::style::Currency*);
 	
 	void
 	SetFontName(const QString &font_name);
@@ -112,7 +114,7 @@ public:
 	SetParentStyle(ods::Style*);
 	
 	void
-	SetPercentStyle(ods::PercentStyle*);
+	SetPercentStyle(ods::style::Percent*);
 	
 	void
 	SetTextColor(const QColor &color);
@@ -137,12 +139,13 @@ private:
 	
 	QColor					background_color_;
 	ods::Book				*book_ = nullptr;
+	ods::style::Currency	*currency_style_ = nullptr;
 	QString					font_name_;
 	double					font_size_ = -1.0;
 	ods::FontSizeType		font_size_type_ = ods::FontSizeType::NotSet;
 	QString					name_;
 	ods::Style				*parent_style_ = nullptr;
-	ods::PercentStyle		*percent_style_ = nullptr;
+	ods::style::Percent		*percent_style_ = nullptr;
 	ods::StylePlace			place_;
 	ods::style::StyleFamily	*style_family_ = nullptr;
 	ods::Tag				*tag_ = nullptr;

@@ -53,6 +53,8 @@ Value::CopyTo(ods::Value &v)
 		v.SetDouble(*AsDouble());
 	else if (IsString())
 		v.SetString(*AsString());
+	else if (IsCurrency())
+		v.SetCurrency(*AsCurrency());
 	else if (IsPercentage())
 		v.SetPercentage(*AsPercentage());
 	else
@@ -96,15 +98,15 @@ Value::Read(ods::Ns &ns, ods::Attrs &attrs)
 		return;
 	}
 	
-	if (IsDouble() || IsPercentage())
+	if (IsDouble() || IsPercentage() || IsCurrency())
 	{
 		double num;
-		if (value_attr->ToDouble(num))
+		if (!value_attr->ToDouble(num))
 		{
-			const auto value_type = IsDouble() ?
-				ods::Type::Double : ods::Type::Percentage;
-			set(new double(num), value_type);
+			mtl_warn("ToDouble()");
+			return;
 		}
+		set(new double(num), type_);
 	} else if (IsString()) {
 		set(new QString(value_attr->value()), ods::Type::String);
 	} else {
@@ -125,6 +127,13 @@ Value::ReadTextP(ods::Tag *tag)
 		SetString(*str);
 		return;
 	}
+}
+
+void
+Value::SetCurrency(const double d)
+{
+	SetDouble(d);
+	type_ = ods::Type::Currency;
 }
 
 void

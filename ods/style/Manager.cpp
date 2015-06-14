@@ -123,7 +123,6 @@ Manager::InitDefaultStyles()
 		QStringLiteral("0.5in"));
 }
 
-
 void
 Manager::Read()
 {

@@ -31,6 +31,7 @@
 #include <QXmlStreamReader>
 
 #include "cell.hxx"
+#include "i18n.hxx"
 #include "tag.hh"
 #include "tag.hxx"
 #include "Value.hpp"
@@ -47,7 +48,6 @@ class Tag;
 class ODS_API Cell
 {
 public:
-	Cell();
 	Cell(ods::Row*, ods::Tag*, const qint32 col_start);
 	virtual ~Cell();
 	
@@ -137,6 +137,10 @@ public:
 	
 	void
 	SetCovered(const bool covered = true);
+
+	void
+	SetCurrencyValue(const double num,
+		const ods::i18n::CurrencyType *curr_type = nullptr);
 	
 	void
 	SetFormula(ods::Formula*);
@@ -182,6 +186,9 @@ private:
 	
 	void
 	Init();
+
+	void
+	SetCurrencyType(const ods::i18n::CurrencyType *kCurrencyType);
 	
 	void
 	UpdateDrawFrame();

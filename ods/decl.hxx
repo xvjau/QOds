@@ -9,7 +9,6 @@ class Content;
 class DrawFrame;
 class Manifest;
 class Meta;
-class PercentStyle;
 class Prefix;
 class Row;
 class Settings;

@@ -194,17 +194,17 @@ TypeFromString(const QString &value_type)
 		return ods::Type::Fail;
 	if (value_type == ods::ns::kDouble)
 		return ods::Type::Double;
-	else if (value_type == ods::ns::kString)
+	if (value_type == ods::ns::kString)
 		return ods::Type::String;
-	else if (value_type == ods::ns::kCurrency)
+	if (value_type == ods::ns::kCurrency)
 		return ods::Type::Currency;
-	else if (value_type == ods::ns::kPercentage)
+	if (value_type == ods::ns::kPercentage)
 		return ods::Type::Percentage;
-	else if (value_type == ods::ns::kDate)
+	if (value_type == ods::ns::kDate)
 		return ods::Type::Date;
-	else if (value_type == ods::ns::kTime)
+	if (value_type == ods::ns::kTime)
 		return ods::Type::Time;
-	else if (value_type == ods::ns::kBool)
+	if (value_type == ods::ns::kBool)
 		return ods::Type::Bool;
 	return ods::Type::Fail;
 }
@@ -212,34 +212,26 @@ TypeFromString(const QString &value_type)
 const char*
 TypeToString(const ods::Type &value_type)
 {
-	if (value_type == ods::Type::Double)
-		return ods::ns::kDouble;
-	else if (value_type == ods::Type::String)
-		return ods::ns::kString;
-	else if (value_type == ods::Type::Currency)
-		return ods::ns::kCurrency;
-	else if (value_type == ods::Type::Percentage)
-		return ods::ns::kPercentage;
-	else if (value_type == ods::Type::Date)
-		return ods::ns::kDate;
-	else if (value_type == ods::Type::Time)
-		return ods::ns::kTime;
-	else if (value_type == ods::Type::Bool)
-		return ods::ns::kBool;
-	else if (value_type == ods::Type::Fail)
-		return "[Fail]";
-	else if (value_type == ods::Type::NotSet)
-		return "[Not set]";
-	else
-		return "[Other]";
-	return nullptr;
+	switch (value_type)
+	{
+	case ods::Type::Double: return ods::ns::kDouble;
+	case ods::Type::String: return ods::ns::kString;
+	case ods::Type::Currency: return ods::ns::kCurrency;
+	case ods::Type::Percentage: return ods::ns::kPercentage;
+	case ods::Type::Date: return ods::ns::kDate;
+	case ods::Type::Time: return ods::ns::kTime;
+	case ods::Type::Bool: return ods::ns::kBool;
+	case ods::Type::Fail: return "[Fail]";
+	case ods::Type::NotSet: return "[Not set]";
+	return "[Other]";
+	}
 }
 
 quint32
 version_major() { return 1; }
 
 quint32
-version_micro() { return 1; }
+version_micro() { return 2; }
 
 quint32
 version_minor() { return 1; }
