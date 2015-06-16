@@ -6,6 +6,8 @@ namespace ods	{ // ods::
 class Book;
 class Cell;
 class Content;
+class CurrencyInfo;
+class Formula;
 class DrawFrame;
 class Manifest;
 class Meta;

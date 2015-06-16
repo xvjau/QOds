@@ -61,9 +61,8 @@ public:
 	ods::Style*
 	CreateCellStyle() { return CreateStyle(ods::StyleFamilyId::Cell); }
 
-	ods::style::Currency*
-	CreateCurrencyStyle(const ods::StylePlace place
-		= ods::StylePlace::ContentFile);
+	ods::Style*
+	CreateCurrencyStyle(const ods::CurrencyInfo &info);
 	
 	ods::style::Percent*
 	CreatePercentStyle(const ods::StylePlace place
@@ -99,7 +98,7 @@ public:
 	extracted() { return extracted_file_paths_.size() > 0; }
 
 	ods::style::Currency*
-	GetCurrencyStyle(const ods::i18n::CurrencyType*);
+	GetCurrencyStyle(const ods::CurrencyInfo*);
 
 	ods::style::Currency*
 	GetCurrencyStyle(const QString &name);
@@ -154,6 +153,10 @@ public:
 	
 private:
 	NO_ASSIGN_COPY_MOVE(Book);
+
+	ods::style::Currency*
+	CreateCurrencyStyle(const ods::StylePlace place
+		= ods::StylePlace::ContentFile);
 	
 	void
 	InitTempDir();

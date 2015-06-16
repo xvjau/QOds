@@ -393,26 +393,31 @@ Lesson12_CreateCurrency()
 	// set to euros (shows "€" instead of "EUR"), Germany,
 	// German, with 3 decimal places
 	// see file i18n.hxx for details.
-	struct ods::i18n::CurrencyType t;
-	t.currency = ods::i18n::kEuro;
-	t.show_symbol = true;
-	t.country = ods::i18n::kGermany;
-	t.language = ods::i18n::kGerman;
-	t.decimal_places = 3;
+	ods::CurrencyInfo info;
+	info.currency_set(ods::i18n::kEuro);
+	info.show_symbol_set(true);
+	info.country_set(ods::i18n::kGermany);
+	info.language_set(ods::i18n::kGerman);
+	info.decimal_places_set(3);
 
-	row->CreateCell(1)->SetCurrencyValue(1008.94, &t);
-	row->CreateCell(2)->SetCurrencyValue(0.402, &t);
+	ods::Style *style = book.CreateCurrencyStyle(info);
+	row->CreateCell(1)->SetCurrencyValue(1008.94, style);
+	row->CreateCell(2)->SetCurrencyValue(0.402, style);
 
 	// set to "USD" (shows "USD" instead of "$"), USA, English
 	// with 1 decimal place
-	t.currency = ods::i18n::kUSD;
-	t.show_symbol = false;
-	t.country = ods::i18n::kUSA;
-	t.language = ods::i18n::kEnglish;
-	t.decimal_places = 1;
+	info.currency_set(ods::i18n::kUSD);
+	info.show_symbol_set(false);
+	info.country_set(ods::i18n::kUSA);
+	info.language_set(ods::i18n::kEnglish);
+	info.decimal_places_set(1);
+	style = book.CreateCurrencyStyle(info);
+	sheet->CreateRow(1)->CreateCell(0)->SetCurrencyValue(4.2, style);
+	sheet->CreateRow(2)->CreateCell(0)->SetCurrencyValue(102.3, style);
 
-	sheet->CreateRow(1)->CreateCell(0)->SetCurrencyValue(4.2, &t);
-	sheet->CreateRow(2)->CreateCell(0)->SetCurrencyValue(102.3, &t);
+	// add a few non-currency values:
+	sheet->CreateRow(3)->CreateCell(0)->SetValue("Hello");
+	sheet->CreateRow(3)->CreateCell(0)->SetValue("40.3");
 
 	Save(book);
 
@@ -475,10 +480,10 @@ main(int argc, char *argv[])
 		<< ods::version_minor() << "." << ods::version_micro();
 	
 	//Lesson1_CreateEmptyBook();
-	//Lesson9_CreateSampleInvoice();
+	Lesson9_CreateSampleInvoice();
 	//Lesson10_ReadFile();
 	//Lesson11_CreateFormulaWithPercentage();
-	Lesson12_CreateCurrency();
+	//Lesson12_CreateCurrency();
 	
 	return 0;
 }

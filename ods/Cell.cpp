@@ -23,6 +23,7 @@
 #include "Cell.hpp"
 #include "Attrs.hpp"
 #include "Book.hpp"
+#include "CurrencyInfo.hpp"
 #include "DrawFrame.hpp"
 #include "Formula.hpp"
 #include "Node.hpp"
@@ -209,47 +210,22 @@ Cell::SetCovered(const bool covered)
 }
 
 void
-Cell::SetCurrencyType(const ods::i18n::CurrencyType *kCurrencyType)
+Cell::SetCurrencyValue(const double num, ods::Style *style)
 {
-	if (value_.IsCurrency())
-	{
-		auto *curr_style = style_->GetCurrencyStyle();
-		curr_style->SetType(kCurrencyType);
-		return;
-	}
 	auto &ns = tag_->ns();
+
+	if (style == nullptr)
+	{
+		// create and use a currency style with default values
+		ods::CurrencyInfo info;
+		style = row_->sheet()->book()->CreateCurrencyStyle(info);
+	}
+
+	SetStyle(style);
+
 	tag_->AttrSet(ns.office(), ods::ns::kValueType, ods::ns::kCurrency);
-
-	QString str = (kCurrencyType == nullptr) ? "EUR" : kCurrencyType->currency.iso;
-	// office:currency="EUR"
-	tag_->AttrSet(ns.office(), ods::ns::kCurrency, str);
-	auto *book = row_->sheet()->book();
-	if (style_ == nullptr)
-	{
-		style_ = book->CreateStyle(ods::StyleFamilyId::Cell,
-			ods::StylePlace::ContentFile);
-		SetStyle(style_);
-	}
-	auto *currency_style = style_->GetCurrencyStyle();
-	if (currency_style == nullptr)
-	{
-		currency_style = book->GetCurrencyStyle(kCurrencyType);
-		if (currency_style == nullptr)
-		{
-			currency_style = book->CreateCurrencyStyle(ods::StylePlace::StylesFile);
-		}
-		style_->SetCurrencyStyle(currency_style);
-	}
-	currency_style->SetType(kCurrencyType);
-}
-
-void
-Cell::SetCurrencyValue(const double num, const ods::i18n::CurrencyType *curr_type)
-{
-	auto &ns = tag_->ns();
-
-	if (!value_.IsCurrency())
-		SetCurrencyType(curr_type);
+	tag_->AttrSet(ns.office(), ods::ns::kCurrency,
+		style->GetCurrencyStyle()->info()->currency().iso);
 
 	// now set the string value + the currency symbol to show up
 	const QString value = QString::number(num);
@@ -260,7 +236,7 @@ Cell::SetCurrencyValue(const double num, const ods::i18n::CurrencyType *curr_typ
 }
 
 void
-Cell::SetFormula(ods::Formula *f)
+Cell::SetFormula(ods::Formula *f, ods::Style *style)
 {
 	if (formula_ != nullptr)
 		delete formula_;
@@ -269,7 +245,17 @@ Cell::SetFormula(ods::Formula *f)
 	auto &ns = tag_->ns();
 	QString str = formula_->formula();
 	tag_->AttrSet(ns.sheet(), ods::ns::kFormula, str);
-	tag_->AttrSet(ns.office(), ods::ns::kValueType, ods::ns::kDouble);
+	if (style == nullptr)
+	{ // is not a currency cell, just a number
+		tag_->AttrSet(ns.office(), ods::ns::kValueType, ods::ns::kDouble);
+		return;
+	}
+
+	SetStyle(style);
+
+	tag_->AttrSet(ns.office(), ods::ns::kValueType, ods::ns::kCurrency);
+	tag_->AttrSet(ns.office(), ods::ns::kCurrency,
+		style->GetCurrencyStyle()->info()->currency().iso);
 }
 
 void

@@ -96,7 +96,7 @@ Formula::GetDouble(ods::cell::Ref *cell_ref, double &num)
 		if (value.NoValue())
 		{
 			mtl_warn("No value");
-		} else if (value.IsDouble()){
+		} else if (value.IsDouble() || value.IsCurrency()){
 			num = *value.AsDouble();
 			return true;
 		} else {
@@ -122,6 +122,7 @@ Formula::UpdateValue()
 	else
 		mtl_qline(QString("\nNew cell address:") + source_->Address());
 	**/
+	//ods::Type saved_type = value_.type();
 	value_.type_set(ods::Type::Fail);
 	err_.clear();
 	if (!formula_.startsWith(ods::kFormulaPrefix))
@@ -184,9 +185,9 @@ Formula::UpdateValue()
 			err_ = QLatin1String("Region::Eval() error");
 			return;
 		}
-		if (!value_.IsDouble())
+		if (!value_.IsDouble() && !value_.IsCurrency())
 		{
-			err_ = QLatin1String("Value not double");
+			err_ = QLatin1String("Value not a number");
 			return;
 		}
 		

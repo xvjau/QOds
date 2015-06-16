@@ -67,7 +67,7 @@ const Currency kGbPound = { CurrencyId::GbPound, "₤", "GBP" };
 const Currency kRenminbi = { CurrencyId::Renminbi, "¥", "CNY" };
 const Currency kRusRuble = { CurrencyId::RusRuble, "₽", "RUB" };
 
-enum class LangId : quint16 {
+enum class LanguageId : quint16 {
 	NotSet = 0,
 	Arabic,
 	Chinese,
@@ -81,30 +81,21 @@ enum class LangId : quint16 {
 	Turkish
 };
 
-struct Lang {
-	ods::i18n::LangId	id;
+struct Language {
+	ods::i18n::LanguageId	id;
 	QString str;
 };
 
-const Lang kArabic { LangId::Arabic, "ar" };
-const Lang kChinese { LangId::Chinese, "zh" };
-const Lang kEnglish { LangId::English, "en" };
-const Lang kFrench { LangId::French, "fr" };
-const Lang kGerman { LangId::German, "de" };
-const Lang kItalian { LangId::Italian, "it" };
-const Lang kPortuguese { LangId::Portuguese, "pt" };
-const Lang kRussian { LangId::Russian, "ru" };
-const Lang kSpanish { LangId::Spanish, "es" };
-const Lang kTurkish { LangId::Turkish, "tr" };
-
-
-struct CurrencyType {
-	ods::i18n::Currency currency;
-	bool show_symbol;
-	ods::i18n::Country country;
-	ods::i18n::Lang language;
-	qint8 decimal_places;
-};
+const Language kArabic { LanguageId::Arabic, "ar" };
+const Language kChinese { LanguageId::Chinese, "zh" };
+const Language kEnglish { LanguageId::English, "en" };
+const Language kFrench { LanguageId::French, "fr" };
+const Language kGerman { LanguageId::German, "de" };
+const Language kItalian { LanguageId::Italian, "it" };
+const Language kPortuguese { LanguageId::Portuguese, "pt" };
+const Language kRussian { LanguageId::Russian, "ru" };
+const Language kSpanish { LanguageId::Spanish, "es" };
+const Language kTurkish { LanguageId::Turkish, "tr" };
 
 } // ods::i18n::
 } // ods::

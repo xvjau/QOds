@@ -1,4 +1,6 @@
 June 2015:
+- Added currency support and updated accordingly the example code which
+creates the sample invoice file.
 - Broke backward compatibility, use now ods::style::Percent
 instead of ods::PercentStyle.
 

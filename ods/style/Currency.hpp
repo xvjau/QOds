@@ -17,14 +17,14 @@ public:
 	Currency(ods::Book*, const ods::StylePlace);
 	virtual ~Currency();
 
-	const ods::i18n::CurrencyType*
-	currency_type() const { return currency_type_; }
+	const ods::CurrencyInfo*
+	info() const { return info_; }
 
 	const QString&
 	name() { return name_; }
 
 	void
-	SetType(const ods::i18n::CurrencyType *kCurrencyType);
+	SetInfo(const ods::CurrencyInfo &info);
 
 	ods::Tag*
 	tag() const { return tag_; }
@@ -45,7 +45,7 @@ private:
 	SetUniqueName();
 
 	ods::Book			*book_ = nullptr;
-	ods::i18n::CurrencyType *currency_type_ = nullptr;
+	ods::CurrencyInfo	*info_ = nullptr;
 	QString				name_;
 	ods::StylePlace		place_;
 	ods::Tag			*tag_ = nullptr;

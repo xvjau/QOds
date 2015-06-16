@@ -1,7 +1,7 @@
 #include "Currency.hpp"
 
 #include "../Book.hpp"
-#include "../i18n.hh"
+#include "../CurrencyInfo.hpp"
 #include "../Ns.hpp"
 #include "Manager.hpp"
 #include "style.hxx"
@@ -24,8 +24,8 @@ Currency::Currency(ods::Book *book,
 
 Currency::~Currency()
 {
-	if (currency_type_ != nullptr)
-		delete currency_type_;
+	if (info_ != nullptr)
+		delete info_;
 }
 
 ods::Tag*
@@ -56,36 +56,22 @@ Currency::SetDecimalPlaces(const qint8 lz)
 }
 
 void
-Currency::SetType(const ods::i18n::CurrencyType *kCurrencyType)
+Currency::SetInfo(const ods::CurrencyInfo &i)
 {
-	auto &ns = tag_->ns();
+	if (info_ == nullptr)
+		info_ = new ods::CurrencyInfo();
+	info_->CopyFrom(i);
 
-	qint8 num = (kCurrencyType == nullptr) ? 2 : kCurrencyType->decimal_places;
-	SetDecimalPlaces(num);
+	auto &ns = tag_->ns();
+	SetDecimalPlaces(info_->decimal_places());
 	// add gap between currency value and sign
 	auto *num_tag = GetTag(ods::tag::NumberText);
-	num_tag->DeleteSubnodes();
 	num_tag->SubnodeAdd(new ods::Node(QStringLiteral(" ")));
 	auto *tag = GetTag(ods::tag::CurrencySymbol);
-	if (kCurrencyType == nullptr)
-	{
-		// set default values
-		tag->SubnodeAdd(new ods::Node(ods::i18n::kEuro.iso));
-		if (currency_type_ != nullptr)
-		{
-			delete currency_type_;
-			currency_type_ = nullptr;
-		}
-		return;
-	}
-	if (currency_type_ == nullptr)
-		currency_type_ = new ods::i18n::CurrencyType();
-	ods::i18n::Copy(*kCurrencyType, *currency_type_);
-	tag->AttrSet(ns.number(), ods::ns::kCountry, kCurrencyType->country.str);
-	tag->AttrSet(ns.number(), ods::ns::kLanguage, kCurrencyType->language.str);
-	auto &currency = kCurrencyType->currency;
-	const QString str = kCurrencyType->show_symbol ? currency.sign : currency.iso;
-	tag->DeleteSubnodes();
+	tag->AttrSet(ns.number(), ods::ns::kCountry, info_->country().str);
+	tag->AttrSet(ns.number(), ods::ns::kLanguage, info_->language().str);
+	auto &currency = info_->currency();
+	const QString str = info_->show_symbol() ? currency.sign : currency.iso;
 	tag->SubnodeAdd(new ods::Node(str));
 }
 

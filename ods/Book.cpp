@@ -22,9 +22,9 @@
 
 #include "Book.hpp"
 #include "Cell.hpp"
+#include "CurrencyInfo.hpp"
 #include "DrawFrame.hpp"
 #include "filename.hxx"
-#include "i18n.hh"
 #include "Manifest.hpp"
 #include "Meta.hpp"
 #include "Row.hpp"
@@ -96,6 +96,17 @@ Book::Add(ods::DrawFrame *df)
 	manifest_->Add(df);
 }
 
+ods::Style*
+Book::CreateCurrencyStyle(const ods::CurrencyInfo &info)
+{
+	auto *style = CreateStyle(ods::StyleFamilyId::Cell,
+		ods::StylePlace::ContentFile);
+	auto *currency_style = CreateCurrencyStyle(ods::StylePlace::StylesFile);
+	style->SetCurrencyStyle(currency_style);
+	currency_style->SetInfo(info);
+	return style;
+}
+
 ods::style::Currency*
 Book::CreateCurrencyStyle(const ods::StylePlace place)
 {
@@ -163,9 +174,9 @@ Book::CreateStyle(const ods::StyleFamilyId id, const ods::StylePlace place)
 }
 
 ods::style::Currency*
-Book::GetCurrencyStyle(const ods::i18n::CurrencyType *kCurrencyType)
+Book::GetCurrencyStyle(const ods::CurrencyInfo *info)
 {
-	if (kCurrencyType == nullptr)
+	if (info == nullptr)
 	{
 		if (currency_styles_.isEmpty())
 			return nullptr;
@@ -173,10 +184,10 @@ Book::GetCurrencyStyle(const ods::i18n::CurrencyType *kCurrencyType)
 	}
 	foreach (auto *item, currency_styles_)
 	{
-		if (item->currency_type() == nullptr)
+		if (item->info() == nullptr)
 			continue;
 
-		if (ods::i18n::Equals(*item->currency_type(), *kCurrencyType))
+		if (item->info()->Equals(*info))
 			return item;
 	}
 	return nullptr;
