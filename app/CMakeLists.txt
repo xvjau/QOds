@@ -9,7 +9,7 @@ include_directories(${QOds_SOURCE_DIR})
 link_directories(${CMAKE_BINARY_DIR}/lib)
 
 if (NOT MSVC)
-	add_definitions(-std=c++11)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif (NOT MSVC)
 
 # Set some Win32 Specific Settings
