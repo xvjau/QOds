@@ -129,8 +129,8 @@ Invoice::CreateSellerHeader()
 	if (!file.exists())
 	{
 		
-		qDebug() << "If there was " << kName <<
-			" in your home dir, I'd also display the \"company logo\".";
+		qDebug() << "If there was" << kName <<
+			"in your home dir, I'd also display the \"company logo\".";
 	} else {
 		auto *draw_frame = cell->CreateDrawFrame(file);
 		if (draw_frame == nullptr)
@@ -193,10 +193,18 @@ Invoice::CreateTable(QVector<app::Item*> *vec, const int kLastRow)
 	
 	auto *border = new ods::style::Border();
 	border->sides_set(ods::BorderSideLeft | ods::BorderSideRight);
-	auto *light_style = book_.CreateCellStyle();
+
+	ods::CurrencyInfo info;
+	info.currency_set(ods::i18n::kEuro);
+	info.show_symbol_set(true);
+	info.country_set(ods::i18n::kGermany);
+	info.language_set(ods::i18n::kGerman);
+	info.decimal_places_set(2);
+
+	auto *light_style = book_.CreateCurrencyStyle(info);
 	light_style->SetBorder(border);
-	
-	auto *dark_style = book_.CreateCellStyle();
+
+	auto *dark_style = book_.CreateCurrencyStyle(info);
 	dark_style->SetBorder(border);
 	const int c = 230;
 	dark_style->SetBackgroundColor(QColor(c, c, c));
@@ -224,8 +232,8 @@ Invoice::CreateTable(QVector<app::Item*> *vec, const int kLastRow)
 		qtty_cell->SetStyle(style);
 		
 		auto *price_cell = row->CreateCell(qtty_cell->UpToColumn()+1);
-		price_cell->SetValue(item->unit_price());
-		price_cell->SetStyle(style);
+		price_cell->SetCurrencyValue(item->unit_price(), style);
+		//price_cell->SetStyle(style);
 		
 		// Next, one could compute the "line total" and insert the
 		// resulting number into "line total", but to make the
@@ -239,9 +247,12 @@ Invoice::CreateTable(QVector<app::Item*> *vec, const int kLastRow)
 		
 		cell = row->CreateCell(price_cell->UpToColumn()+1);
 		cell->SetRowColSpan(1, 2);
-		cell->SetFormula(formula);
-		cell->SetStyle(style);
-		
+		// if the value of the cell should be a (normal) number and not a
+		// currency number then call these 2 functions instead:
+		// cell->SetFormula(formula);
+		// cell->SetStyle(style);
+		cell->SetFormula(formula, style);
+
 		line_total_cells.append(cell);
 	}
 	
@@ -281,12 +292,11 @@ Invoice::CreateTable(QVector<app::Item*> *vec, const int kLastRow)
 	auto *total_cell = row->CreateCell(
 		unit_price_cell->UpToColumn() + 1);
 	total_cell->SetRowColSpan(1, 2);
-	total_cell->SetFormula(formula);
 	
 	border = new ods::style::Border(); // all sides
-	auto *total_style = style->Derive();
+	auto *total_style = book_.CreateCurrencyStyle(info);
 	total_style->SetBorder(border);
-	total_cell->SetStyle(total_style);
+	total_cell->SetFormula(formula, total_style);
 	
 	return last_row_index;
 }
@@ -367,7 +377,7 @@ Invoice::Init()
 		qDebug() << "CreateTableHeader() failed";
 		return;
 	}
-	
+
 	QVector<app::Item*> *items = GenItems();
 	last_index = CreateTable(items, last_index);
 	if (last_index == -1)

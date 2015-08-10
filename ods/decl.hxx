@@ -6,10 +6,11 @@ namespace ods	{ // ods::
 class Book;
 class Cell;
 class Content;
+class CurrencyInfo;
+class Formula;
 class DrawFrame;
 class Manifest;
 class Meta;
-class PercentStyle;
 class Prefix;
 class Row;
 class Settings;

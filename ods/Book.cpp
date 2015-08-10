@@ -22,16 +22,18 @@
 
 #include "Book.hpp"
 #include "Cell.hpp"
+#include "CurrencyInfo.hpp"
 #include "DrawFrame.hpp"
 #include "filename.hxx"
 #include "Manifest.hpp"
 #include "Meta.hpp"
-#include "PercentStyle.hpp"
 #include "Row.hpp"
 #include "Settings.hpp"
 #include "Sheet.hpp"
 #include "Style.hpp"
+#include "style/Currency.hpp"
 #include "style/Manager.hpp"
+#include "style/Percent.hpp"
 #include "style/tag.hh"
 #include "style/StyleFamily.hpp"
 #include "Tag.hpp"
@@ -94,12 +96,37 @@ Book::Add(ods::DrawFrame *df)
 	manifest_->Add(df);
 }
 
-ods::PercentStyle*
+ods::Style*
+Book::CreateCurrencyStyle(const ods::CurrencyInfo &info)
+{
+	auto *style = CreateStyle(ods::StyleFamilyId::Cell,
+		ods::StylePlace::ContentFile);
+	auto *currency_style = CreateCurrencyStyle(ods::StylePlace::StylesFile);
+	style->SetCurrencyStyle(currency_style);
+	currency_style->SetInfo(info);
+	return style;
+}
+
+ods::style::Currency*
+Book::CreateCurrencyStyle(const ods::StylePlace place)
+{
+	if (content_ == nullptr)
+		InitDefault();
+	auto *currency_style = new ods::style::Currency(this, place);
+	currency_styles_.append(currency_style);
+	auto *parent_tag = (place == ods::StylePlace::StylesFile) ?
+		style_manager_->styles_tag() : content_->automatic_styles_tag();
+	auto *tag = currency_style->tag();
+	parent_tag->subnodes().append(new ods::Node(tag));
+	return currency_style;
+}
+
+ods::style::Percent*
 Book::CreatePercentStyle(const ods::StylePlace place)
 {
 	if (content_ == nullptr)
 		InitDefault();
-	auto *percent_style = new ods::PercentStyle(this, place);
+	auto *percent_style = new ods::style::Percent(this, place);
 	percent_styles_.append(percent_style);
 	auto *parent_tag = (place == ods::StylePlace::StylesFile) ?
 		style_manager_->styles_tag() : content_->automatic_styles_tag();
@@ -146,6 +173,37 @@ Book::CreateStyle(const ods::StyleFamilyId id, const ods::StylePlace place)
 	return CreateStyle(id, place, ods::style::tag::Style);
 }
 
+ods::style::Currency*
+Book::GetCurrencyStyle(const ods::CurrencyInfo *info)
+{
+	if (info == nullptr)
+	{
+		if (currency_styles_.isEmpty())
+			return nullptr;
+		return currency_styles_[0];
+	}
+	foreach (auto *item, currency_styles_)
+	{
+		if (item->info() == nullptr)
+			continue;
+
+		if (item->info()->Equals(*info))
+			return item;
+	}
+	return nullptr;
+}
+
+ods::style::Currency*
+Book::GetCurrencyStyle(const QString &name)
+{
+	foreach (auto *item, currency_styles_)
+	{
+		if (name == item->name())
+			return item;
+	}
+	return nullptr;
+}
+
 QString*
 Book::GetMediaDirPath()
 {
@@ -161,7 +219,7 @@ Book::GetMediaDirPath()
 	return &media_dir_path_;
 }
 
-ods::PercentStyle*
+ods::style::Percent*
 Book::GetPercentStyle(const qint8 decimal_places)
 {
 	foreach (auto *item, percent_styles_)
@@ -172,7 +230,7 @@ Book::GetPercentStyle(const qint8 decimal_places)
 	return nullptr;
 }
 
-ods::PercentStyle*
+ods::style::Percent*
 Book::GetPercentStyle(const QString &name, const qint8 decimal_places)
 {
 	foreach (auto *item, percent_styles_)

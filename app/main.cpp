@@ -74,7 +74,7 @@ Lesson2_CreateCellsOfDifferentTypes()
 	// Cell with another percentage value
 	cell = row->CreateCell(3);
 	cell->SetPercentageValue(17.2); // 17.2 = 1720%, the second param
-	// by default is zero, hence it'll will show up as "1720%" and not
+	// by default is zero, hence it will show up as "1720%" and not
 	// as "1720.0%" or "1720.00%".
 	
 	Save(book);
@@ -301,7 +301,7 @@ Lesson10_ReadFile()
 		qDebug() << "No sheet at 0";
 		return;
 	}
-	
+
 	//print out the values of the first 9 cells of the 3th row:
 	const int kRow = 2;
 	for (int i=0; i <= 8; i++)
@@ -380,6 +380,62 @@ Lesson11_CreateFormulaWithPercentage()
 	Save(book);
 }
 
+void
+Lesson12_CreateCurrency()
+{
+	ods::Book book;
+	auto *sheet = book.CreateSheet("Sheet1");
+	auto *row = sheet->CreateRow(0);
+
+	auto *cell = row->CreateCell(0);
+	cell->SetCurrencyValue(524); // defaults to "EUR" (euros)
+
+	// set to euros (shows "€" instead of "EUR"), Germany,
+	// German, with 3 decimal places
+	// see file i18n.hxx for details.
+	ods::CurrencyInfo info;
+	info.currency_set(ods::i18n::kEuro);
+	info.show_symbol_set(true);
+	info.country_set(ods::i18n::kGermany);
+	info.language_set(ods::i18n::kGerman);
+	info.decimal_places_set(3);
+
+	ods::Style *style = book.CreateCurrencyStyle(info);
+	row->CreateCell(1)->SetCurrencyValue(1008.94, style);
+	row->CreateCell(2)->SetCurrencyValue(0.402, style);
+
+	// set to "USD" (shows "USD" instead of "$"), USA, English
+	// with 1 decimal place
+	info.currency_set(ods::i18n::kUSD);
+	info.show_symbol_set(false);
+	info.country_set(ods::i18n::kUSA);
+	info.language_set(ods::i18n::kEnglish);
+	info.decimal_places_set(1);
+	style = book.CreateCurrencyStyle(info);
+	sheet->CreateRow(1)->CreateCell(0)->SetCurrencyValue(4.2, style);
+	sheet->CreateRow(2)->CreateCell(0)->SetCurrencyValue(102.3, style);
+
+	// add a few non-currency values:
+	sheet->CreateRow(3)->CreateCell(0)->SetValue("Hello");
+	sheet->CreateRow(3)->CreateCell(0)->SetValue("40.3");
+
+	Save(book);
+
+	/**
+	// => read values from currency cells
+	// for example read cell at row 0 col 0:
+	auto *cell = sheet->row(0)->cell(0);
+	auto &value = cell->value();
+	if (!value.IsCurrency())
+	{
+		printf("Not a currency cell\n");
+		return;
+	}
+	qDebug() << "currency value:" << *value.AsCurrency(); // returns a double
+	// <= read values from currency cells
+	**/
+}
+
 QString
 GetCellValue(ods::Cell *cell)
 {
@@ -424,9 +480,10 @@ main(int argc, char *argv[])
 		<< ods::version_minor() << "." << ods::version_micro();
 	
 	//Lesson1_CreateEmptyBook();
-	//Lesson9_CreateSampleInvoice();
+	Lesson9_CreateSampleInvoice();
 	//Lesson10_ReadFile();
-	Lesson11_CreateFormulaWithPercentage();
+	//Lesson11_CreateFormulaWithPercentage();
+	//Lesson12_CreateCurrency();
 	
 	return 0;
 }

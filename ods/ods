@@ -23,6 +23,7 @@
 #include <ods/Book.hpp>
 #include <ods/Cell.hpp>
 #include <ods/cell.hxx>
+#include <ods/CurrencyInfo.hpp>
 #include <ods/DrawFrame.hpp>
 #include <ods/Formula.hpp>
 #include <ods/Meta.hpp>

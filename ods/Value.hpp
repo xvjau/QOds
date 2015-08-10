@@ -47,6 +47,9 @@ public:
 	
 	bool*
 	AsBool() const { return (bool*) data_; }
+
+	double*
+	AsCurrency() const { return AsDouble(); }
 	
 	QDateTime*
 	AsDate() const { return (QDateTime*) data_; }
@@ -117,6 +120,9 @@ public:
 		data_ = value;
 		type_ = kType;
 	}
+
+	void
+	SetCurrency(const double d);
 	
 	void
 	SetDouble(const double d);

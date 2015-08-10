@@ -1,19 +1,20 @@
-#ifndef ODS_PERCENTSTYLE_HPP_
-#define ODS_PERCENTSTYLE_HPP_
+#ifndef ODS_STYLE_PERCENT_HPP_
+#define ODS_STYLE_PERCENT_HPP_
 
-#include "decl.hxx"
-#include "err.hpp"
-#include "ns.hxx"
-#include "ods.hxx"
-#include "tag.hxx"
+#include "../decl.hxx"
+#include "../err.hpp"
+#include "../ns.hxx"
+#include "../ods.hxx"
+#include "../tag.hxx"
 
 namespace ods	{ // ods::
+namespace style	{ // ods::style::
 
-class ODS_API PercentStyle
+class ODS_API Percent
 {
 public:
-	PercentStyle(ods::Book *book, const ods::StylePlace place);
-	virtual ~PercentStyle();
+	Percent(ods::Book *book, const ods::StylePlace place);
+	virtual ~Percent();
 	
 	qint8
 	decimal_places() const { return decimal_places_; }
@@ -31,7 +32,7 @@ public:
 	tag() const { return tag_; }
 
 private:
-	NO_ASSIGN_COPY_MOVE(PercentStyle);
+	NO_ASSIGN_COPY_MOVE(Percent);
 	
 	void
 	Init();
@@ -47,5 +48,6 @@ private:
 	ods::Tag			*tag_ = nullptr;
 };
 
+} // ods::style::
 } // ods::
 #endif

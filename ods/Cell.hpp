@@ -31,23 +31,17 @@
 #include <QXmlStreamReader>
 
 #include "cell.hxx"
+#include "decl.hxx"
+#include "i18n.hxx"
 #include "tag.hh"
 #include "tag.hxx"
 #include "Value.hpp"
 
 namespace ods	{ // ods::
 
-class DrawFrame;
-class Formula;
-class Prefix;
-class Row;
-class Style;
-class Tag;
-
 class ODS_API Cell
 {
 public:
-	Cell();
 	Cell(ods::Row*, ods::Tag*, const qint32 col_start);
 	virtual ~Cell();
 	
@@ -137,9 +131,12 @@ public:
 	
 	void
 	SetCovered(const bool covered = true);
+
+	void
+	SetCurrencyValue(const double num, ods::Style *style = nullptr);
 	
 	void
-	SetFormula(ods::Formula*);
+	SetFormula(ods::Formula*, ods::Style *style = nullptr);
 	
 	void
 	SetNumColsRepeated(const quint16 num);
@@ -182,7 +179,7 @@ private:
 	
 	void
 	Init();
-	
+
 	void
 	UpdateDrawFrame();
 	

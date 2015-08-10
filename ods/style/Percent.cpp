@@ -1,15 +1,16 @@
-#include "PercentStyle.hpp"
+#include "Percent.hpp"
 
-#include "Book.hpp"
-#include "Ns.hpp"
-#include "style/Manager.hpp"
-#include "style/style.hxx"
-#include "style/tag.hh"
-#include "Tag.hpp"
+#include "../Book.hpp"
+#include "../Ns.hpp"
+#include "Manager.hpp"
+#include "style.hxx"
+#include "tag.hh"
+#include "../Tag.hpp"
 
-namespace ods { // ods::
+namespace ods	{ // ods::
+namespace style	{ // ods::style::
 
-PercentStyle::PercentStyle(ods::Book *book,
+Percent::Percent(ods::Book *book,
 	const ods::StylePlace place) :
 	book_(book),
 	place_(place)
@@ -20,34 +21,34 @@ PercentStyle::PercentStyle(ods::Book *book,
 	Init();
 }
 
-PercentStyle::~PercentStyle()
+Percent::~Percent()
 {}
 
 ods::Tag*
-PercentStyle::GetTag(ods::tag::func f)
+Percent::GetTag(ods::tag::func f)
 {
 	auto *tag = tag_->GetSubtag(f);
-	if (tag == nullptr)
-	{
-		tag = f(tag_->ns(), nullptr);
-		tag_->SubtagAdd(tag);
-	}
+	if (tag != nullptr)
+		return tag;
+	tag = f(tag_->ns(), nullptr);
+	tag_->SubtagAdd(tag);
 	return tag;
 }
 
 void
-PercentStyle::Init()
+Percent::Init()
 {
 	SetUniqueName();
 }
 
 void
-PercentStyle::SetDecimalPlaces(const qint8 lz)
+Percent::SetDecimalPlaces(const qint8 lz)
 {
 	decimal_places_ = (lz >= 0) ? lz : 0;
 	auto &ns = tag_->ns();
 	auto *tag = GetTag(ods::tag::Number);
-	tag->AttrSet(ns.number(), ods::ns::kDecimalPlaces, QString::number(lz));
+	tag->AttrSet(ns.number(), ods::ns::kDecimalPlaces,
+		QString::number(decimal_places_));
 	tag->AttrSet(ns.number(), ods::ns::kMinIntegerDigits, "1");
 	
 	if (add_percent_sign_)
@@ -59,7 +60,7 @@ PercentStyle::SetDecimalPlaces(const qint8 lz)
 }
 
 void
-PercentStyle::SetUniqueName()
+Percent::SetUniqueName()
 {
 	const QString base = (place_ == ods::StylePlace::StylesFile) ?
 		QStringLiteral("psst") : QStringLiteral("pscn");
@@ -74,4 +75,5 @@ PercentStyle::SetUniqueName()
 	tag_->AttrSet(tag_->ns().style(), ods::ns::kName, name_);
 }
 
+} // ods::style::
 } // ods::

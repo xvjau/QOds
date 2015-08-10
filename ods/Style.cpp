@@ -24,9 +24,10 @@
 #include "Book.hpp"
 #include "Ns.hpp"
 #include "ods.hh"
-#include "PercentStyle.hpp"
 #include "style/Border.hpp"
+#include "style/Currency.hpp"
 #include "style/Manager.hpp"
+#include "style/Percent.hpp"
 #include "style/style.hxx"
 #include "style/tag.hh"
 #include "style/StyleFamily.hpp"
@@ -77,7 +78,26 @@ Style::FontSizeInInches()
 	return font_size_ * ods::kInchesInAPoint;
 }
 
-ods::PercentStyle*
+ods::style::Currency*
+Style::GetCurrencyStyle()
+{
+	if (currency_style_ != nullptr)
+		return currency_style_;
+
+	auto &ns = tag_->ns();
+	const QString *name = tag_->GetAttrString(ns.style(),
+		ods::ns::kDataStyleName);
+	if (name == nullptr)
+		return nullptr;
+
+	auto *currency_style = book_->GetCurrencyStyle(*name);
+	if (currency_style != nullptr)
+		return currency_style;
+	mtl_line("Style not found");
+	return nullptr;
+}
+
+ods::style::Percent*
 Style::GetPercentStyle()
 {
 	if (percent_style_ != nullptr)
@@ -90,12 +110,10 @@ Style::GetPercentStyle()
 		return nullptr;
 	
 	auto *percent_style = book_->GetPercentStyle(*name);
-	if (percent_style == nullptr)
-	{
-		mtl_line("Got style name, but not found");
-		return nullptr;
-	}
-	return percent_style;
+	if (percent_style != nullptr)
+		return percent_style;
+	mtl_line("Style not found");
+	return nullptr;
 }
 
 void
@@ -106,41 +124,6 @@ Style::Init()
 	if (tag_->func() != ods::style::tag::DefaultStyle)
 		SetUniqueName();
 }
-
-/**
-ods::Tag*
-Style::GetCellPropsTag() {
-	return GetTag(tag_->ns().style(), ods::style::kSheetCellProps,
-		ods::style::tag::SheetCellProps);
-}
-
-ods::Tag*
-Style::GetColumnPropsTag() {
-	return GetTag(tag_->ns().style(), ods::style::kSheetColumnProps,
-		ods::style::tag::SheetColumnProps);
-}
-
-ods::Tag*
-Style::GetGraphicPropsTag()
-{
-	return GetTag(tag_->ns().style(), ods::style::kGraphicProps,
-		ods::style::tag::GraphicProps);
-}
-
-ods::Tag*
-Style::GetParagraphPropsTag()
-{
-	return GetTag(tag_->ns().style(), ods::style::kParagraphProps,
-		ods::style::tag::ParagraphProps);
-}
-
-ods::Tag*
-Style::GetRowPropsTag()
-{
-	return GetTag(tag_->ns().style(), ods::style::kSheetRowProps,
-		ods::style::tag::SheetRowProps);
-}
-**/
 
 ods::Tag*
 Style::GetTag(ods::tag::func f)
@@ -153,13 +136,7 @@ Style::GetTag(ods::tag::func f)
 	}
 	return tag;
 }
-/**
-ods::Tag*
-Style::GetTextPropsTag() {
-	return GetTag(tag_->ns().style(), ods::style::kTextProps, 
-		ods::style::tag::TextProps);
-}
-**/
+
 void
 Style::SetBackgroundColor(const QColor &color)
 {
@@ -205,6 +182,13 @@ Style::SetBorder(ods::style::Border *border)
 		tag->AttrSet(tag_->ns().fo(), ods::style::kBorderRight, val);
 	if (sides & ods::BorderSideTop)
 		tag->AttrSet(tag_->ns().fo(), ods::style::kBorderTop, val);
+}
+
+void
+Style::SetCurrencyStyle(ods::style::Currency *st)
+{
+	currency_style_ = st;
+	tag_->AttrSet(tag_->ns().style(), ods::ns::kDataStyleName, st->name());
 }
 
 void
@@ -309,7 +293,7 @@ Style::SetParentStyle(ods::Style *style)
 }
 
 void
-Style::SetPercentStyle(ods::PercentStyle *pst)
+Style::SetPercentStyle(ods::style::Percent *pst)
 {
 	percent_style_ = pst;
 	tag_->AttrSet(tag_->ns().style(), ods::ns::kDataStyleName, pst->name());

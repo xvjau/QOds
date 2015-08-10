@@ -27,6 +27,7 @@
 #include "decl.hxx"
 #include "Duration.hpp"
 #include "err.hpp"
+#include "i18n.hxx"
 #include "ods.hh"
 #include "tag.hxx"
 #include <QDateTime>
@@ -39,7 +40,9 @@ class QXmlStreamWriter;
 namespace ods	{
 
 namespace style	{ // ods::style::
+class Currency;
 class Manager;
+class Percent;
 } // ods::style::
 
 class ODS_API Book
@@ -57,8 +60,11 @@ public:
 	
 	ods::Style*
 	CreateCellStyle() { return CreateStyle(ods::StyleFamilyId::Cell); }
+
+	ods::Style*
+	CreateCurrencyStyle(const ods::CurrencyInfo &info);
 	
-	ods::PercentStyle*
+	ods::style::Percent*
 	CreatePercentStyle(const ods::StylePlace place
 		= ods::StylePlace::ContentFile);
 	
@@ -90,6 +96,12 @@ public:
 	
 	bool
 	extracted() { return extracted_file_paths_.size() > 0; }
+
+	ods::style::Currency*
+	GetCurrencyStyle(const ods::CurrencyInfo*);
+
+	ods::style::Currency*
+	GetCurrencyStyle(const QString &name);
 	
 	const QString&
 	GetFrameId(const QString kFileName);
@@ -97,12 +109,12 @@ public:
 	QString*
 	GetMediaDirPath();
 	
-	ods::PercentStyle*
+	ods::style::Percent*
 	GetPercentStyle(const QString &name, const qint8 decimal_places = -1);
 	
-	ods::PercentStyle*
+	ods::style::Percent*
 	GetPercentStyle(const qint8 decimal_places);
-	
+
 	ods::Style*
 	GetStyle(const QString &name, const ods::StyleFamilyId id);
 	
@@ -141,6 +153,10 @@ public:
 	
 private:
 	NO_ASSIGN_COPY_MOVE(Book);
+
+	ods::style::Currency*
+	CreateCurrencyStyle(const ods::StylePlace place
+		= ods::StylePlace::ContentFile);
 	
 	void
 	InitTempDir();
@@ -155,6 +171,7 @@ private:
 	SaveMimeTypeFile(const QString &dir_path);
 	
 	ods::Content			*content_ = nullptr;
+	QVector<ods::style::Currency*> currency_styles_;
 	const bool				dev_mode_ = false;
 	QVector<ods::DrawFrame*>	draw_frames_;
 	QString					err_;
@@ -165,7 +182,7 @@ private:
 	ods::Settings			*settings_ = nullptr;
 	ods::style::Manager		*style_manager_ = nullptr;
 	QVector<ods::Style*>	styles_;
-	QVector<ods::PercentStyle*> percent_styles_;
+	QVector<ods::style::Percent*> percent_styles_;
 	QTemporaryDir			temp_dir_;
 	QString					temp_dir_path_;
 };

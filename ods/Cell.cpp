@@ -23,12 +23,14 @@
 #include "Cell.hpp"
 #include "Attrs.hpp"
 #include "Book.hpp"
+#include "CurrencyInfo.hpp"
 #include "DrawFrame.hpp"
 #include "Formula.hpp"
 #include "Node.hpp"
 #include "Ns.hpp"
 #include "ods.hh"
-#include "PercentStyle.hpp"
+#include "style/Currency.hpp"
+#include "style/Percent.hpp"
 #include "Row.hpp"
 #include "Sheet.hpp"
 #include "style/style.hxx"
@@ -40,11 +42,6 @@
 #include "Value.hpp"
 
 namespace ods	{
-
-Cell::Cell()
-{
-	mtl_qline("FIX THE CODE");
-}
 
 Cell::Cell(ods::Row *row, ods::Tag *tag, const qint32 col_start) :
 	col_start_(col_start),
@@ -213,7 +210,33 @@ Cell::SetCovered(const bool covered)
 }
 
 void
-Cell::SetFormula(ods::Formula *f)
+Cell::SetCurrencyValue(const double num, ods::Style *style)
+{
+	auto &ns = tag_->ns();
+
+	if (style == nullptr)
+	{
+		// create and use a currency style with default values
+		ods::CurrencyInfo info;
+		style = row_->sheet()->book()->CreateCurrencyStyle(info);
+	}
+
+	SetStyle(style);
+
+	tag_->AttrSet(ns.office(), ods::ns::kValueType, ods::ns::kCurrency);
+	tag_->AttrSet(ns.office(), ods::ns::kCurrency,
+		style->GetCurrencyStyle()->info()->currency().iso);
+
+	// now set the string value + the currency symbol to show up
+	const QString value = QString::number(num);
+	tag_->AttrSet(ns.office(), ods::ns::kValue, value);
+	tag_->SetTextP(value + QStringLiteral(" €"));
+	if (tag_->attrs() != nullptr)
+		value_.Read(ns, *tag_->attrs());
+}
+
+void
+Cell::SetFormula(ods::Formula *f, ods::Style *style)
 {
 	if (formula_ != nullptr)
 		delete formula_;
@@ -222,7 +245,17 @@ Cell::SetFormula(ods::Formula *f)
 	auto &ns = tag_->ns();
 	QString str = formula_->formula();
 	tag_->AttrSet(ns.sheet(), ods::ns::kFormula, str);
-	tag_->AttrSet(ns.office(), ods::ns::kValueType, ods::ns::kDouble);
+	if (style == nullptr)
+	{ // is not a currency cell, just a number
+		tag_->AttrSet(ns.office(), ods::ns::kValueType, ods::ns::kDouble);
+		return;
+	}
+
+	SetStyle(style);
+
+	tag_->AttrSet(ns.office(), ods::ns::kValueType, ods::ns::kCurrency);
+	tag_->AttrSet(ns.office(), ods::ns::kCurrency,
+		style->GetCurrencyStyle()->info()->currency().iso);
 }
 
 void
