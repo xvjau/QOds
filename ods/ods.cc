@@ -71,7 +71,7 @@ FindCell(ods::cell::Ref *ref, ods::Cell *source)
 			+ QString::number(sheet->CalcRowCount()));
 		return nullptr;
 	}
-	
+
 	auto *cell = row->cell(ref->col);
 	if (cell == nullptr)
 	{
@@ -111,7 +111,7 @@ GenColIndex(const QStringRef &letters)
 		else
 			col += pow(26, kCount - j - 1) * (kDiff+1);
 	}
-	
+
 	return col;
 }
 
@@ -128,7 +128,7 @@ GenColName(const qint32 column)
 		offset += top;
 		++digit_count;
 	}
-	
+
 	QString ret;
 	qint32 col = column - offset;
 	const auto kCharACode = QChar('A').unicode();
@@ -148,7 +148,7 @@ ReadRowCol(const QStringRef &s)
 	//=> FIXME
 	/** skip '.', create proper solution later **/
 	QStringRef cell_name = s.right(s.size() -1);
-	
+
 	/**
 	QString out_str = s.toString() + QString(" becomes ")
 		+ cell_name.toString();
@@ -156,13 +156,13 @@ ReadRowCol(const QStringRef &s)
 	**/
 	auto *cell_ref = new ods::cell::Ref();
 	const int count = cell_name.size();
-	
+
 	for(int i = 0; i < count; i++)
 	{
 		QChar c = cell_name.at(i);
 		if (!c.isDigit())
 			continue;
-		
+
 		QStringRef letters = cell_name.left(i);
 		cell_ref->col = ods::GenColIndex(letters);
 		QStringRef digits = cell_name.right(count - i);
@@ -178,7 +178,7 @@ ReadRowCol(const QStringRef &s)
 			return nullptr;
 		}
 	}
-	
+
 	/**
 	out_str = QString("End result, row/col: ") + QString::number(cell_ref->row)
 		+ QString("/") + QString::number(cell_ref->col);
@@ -223,8 +223,8 @@ TypeToString(const ods::Type &value_type)
 	case ods::Type::Bool: return ods::ns::kBool;
 	case ods::Type::Fail: return "[Fail]";
 	case ods::Type::NotSet: return "[Not set]";
-	return "[Other]";
 	}
+	return "[Other]";
 }
 
 quint32
