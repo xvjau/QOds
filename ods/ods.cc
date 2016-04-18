@@ -31,6 +31,8 @@
 #include <QMap>
 #include <QXmlStreamWriter>
 
+#include <cmath>
+
 namespace ods	{ // ods::
 
 QChar
