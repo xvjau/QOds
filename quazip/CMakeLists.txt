@@ -6,16 +6,13 @@ endif (NOT MSVC)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# Instruct CMake to run moc automatically when needed.
-set(CMAKE_AUTOMOC ON)
 
 include_directories(${QOds_SOURCE_DIR})
 include_directories(${QOds_SOURCE_DIR}/zlib)
 link_directories(${QOds_BINARY_DIR})
 link_directories(${QOds_BINARY_DIR}/lib)
 
-
-find_package(Qt5Core REQUIRED)
+find_package(Qt5 COMPONENTS Core)
 
 # set all include directories for in and out of source builds
 include_directories(
@@ -36,5 +33,6 @@ else (DEFINED QUAZIP_STATIC)
 endif (DEFINED QUAZIP_STATIC)
 
 add_library(quazip ${lib_type} ${src_files})
+set_property(TARGET quazip PROPERTY AUTOMOC ON)
 #set_target_properties(quazip PROPERTIES VERSION 1.0.0 SOVERSION 1)
 target_link_libraries(quazip Qt5::Core zlib)

@@ -6,8 +6,6 @@
 message(STATUS ${CMAKE_CURRENT_LIST_FILE})
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# Instruct CMake to run moc automatically when needed.
-set(CMAKE_AUTOMOC ON)
 
 include_directories(${QOds_SOURCE_DIR})
 link_directories(${QOds_BINARY_DIR}/lib)
@@ -16,8 +14,7 @@ if (NOT MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif (NOT MSVC)
 
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Gui REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui)
 
 file(GLOB_RECURSE lib_files
 	"*.h" "*.hh" "*.hpp" "*.hxx"
@@ -38,8 +35,5 @@ else (DEFINED ODS_STATIC)
 endif (DEFINED ODS_STATIC)
 
 add_library(ods ${lib_type} ${lib_files})
+set_property(TARGET ods PROPERTY AUTOMOC ON)
 target_link_libraries(ods quazip Qt5::Core Qt5::Gui)
-
-
-
- 

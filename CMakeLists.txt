@@ -9,9 +9,9 @@ message(STATUS ${CMAKE_SYSTEM}) # print OS name
 
 #set (BUILD_STATIC_LIBRARIES "1")
 if (BUILD_STATIC_LIBRARIES)
-	set(ODS_STATIC "1")
-	set(QUAZIP_STATIC "1")
-	set(ZLIB_STATIC "1")
+    set(ODS_STATIC "1")
+    set(QUAZIP_STATIC "1")
+    set(ZLIB_STATIC "1")
 endif (BUILD_STATIC_LIBRARIES)
 
 add_subdirectory(zlib)
