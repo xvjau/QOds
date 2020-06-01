@@ -6,10 +6,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${QOds_SOURCE_DIR})
 link_directories(${CMAKE_BINARY_DIR}/lib)
 
-if (NOT MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-endif (NOT MSVC)
-
 # Set some Win32 Specific Settings
 if(WIN32)
 	set(GUI_TYPE "") #or WIN32 for no console output

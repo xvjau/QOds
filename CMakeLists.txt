@@ -5,6 +5,8 @@ Project(QOds)
 
 set(LIBRARY_OUTPUT_PATH "${QOds_BINARY_DIR}/lib")
 
+set(CMAKE_CXX_STANDARD 17)
+
 message(STATUS ${CMAKE_SYSTEM}) # print OS name
 
 #set (BUILD_STATIC_LIBRARIES "1")

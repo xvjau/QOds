@@ -10,10 +10,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${QOds_SOURCE_DIR})
 link_directories(${QOds_BINARY_DIR}/lib)
 
-if (NOT MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-endif (NOT MSVC)
-
 find_package(Qt5 COMPONENTS Core Gui)
 
 file(GLOB_RECURSE lib_files
