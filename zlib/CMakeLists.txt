@@ -11,6 +11,8 @@ link_directories(${QOds_BINARY_DIR}/lib)
 
 set(VERSION "1.2.8")
 
+set(CMAKE_CXX_STANDARD 17)
+
 option(ASM686 "Enable building i686 assembly implementation")
 option(AMD64 "Enable building amd64 assembly implementation")
 
@@ -48,6 +50,8 @@ if(MSVC)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
     include_directories(${CMAKE_CURRENT_SOURCE_DIR})
     include_directories("/GnuWin32/include")
+else()
+    add_compile_options(-Wimplicit-fallthrough=0)
 endif()
 
 if(NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR)
