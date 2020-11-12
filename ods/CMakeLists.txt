@@ -3,6 +3,7 @@
 # .hh, .cc:  namespace with functions
 # .cpp, hpp: classes
 # .hxx:      (const) declarations
+cmake_policy(SET CMP0100 NEW)
 message(STATUS ${CMAKE_CURRENT_LIST_FILE})
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
