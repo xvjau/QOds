@@ -35,33 +35,33 @@ class ODS_API Prefix
 public:
 	Prefix(const ods::Uri &uri);
 	virtual ~Prefix();
-	
+
 	const QString&
 	str() const { return str_; }
-	
+
 	void
 	str_set(const QString &s) { str_ = s; }
-	
+
 	const ods::Uri&
 	uri() const { return uri_; }
-	
+
 	const QString&
 	With(const char *name);
-	
+
 	inline void
 	Write(QXmlStreamWriter &xml) const
 	{
 		if (!str_.isEmpty())
-			xml.writeNamespace(uri_.str, str_);
+			xml.writeNamespace(QString::fromLocal8Bit(uri_.str), str_);
 	}
-	
+
 private:
 	NO_ASSIGN_COPY_MOVE(Prefix);
-	
+
 	QMap<const char*, QString>	map_;
 	QString						str_;
 	const ods::Uri				&uri_;
-	
+
 };
 
 } // ods::
