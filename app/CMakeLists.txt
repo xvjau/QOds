@@ -29,4 +29,4 @@ endforeach()
 
 add_executable(ods_test ${GUI_TYPE} ${src_files})
 set_property(TARGET ods_test PROPERTY AUTOMOC ON)
-target_link_libraries(ods_test ods quazip zlib Qt5::Core Qt5::Gui)
+target_link_libraries(ods_test ods quazip Qt5::Core Qt5::Gui)

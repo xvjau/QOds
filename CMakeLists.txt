@@ -1,6 +1,3 @@
-#cmake -G "MinGW Makefiles"
-message(STATUS "${CMAKE_CURRENT_LIST_FILE}")
-cmake_minimum_required(VERSION 2.8.12)
 Project(QOds)
 
 set(LIBRARY_OUTPUT_PATH "${QOds_BINARY_DIR}/lib")
@@ -17,7 +14,14 @@ if (BUILD_STATIC_LIBRARIES)
 endif (BUILD_STATIC_LIBRARIES)
 
 if(NOT TARGET zlib)
-    add_subdirectory(zlib)
+    find_package(ZLIB)
+    if(NOT ZLIB_FOUND)
+        add_subdirectory(zlib)
+        set(ZLIB_LIBRARIES zlib)
+        set(ZLIB_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/zlib)
+    endif()
+else()
+    set(ZLIB_LIBRARIES zlib)
 endif()
 add_subdirectory(quazip)
 add_subdirectory(ods)
